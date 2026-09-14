@@ -1,0 +1,58 @@
+# Cotton variety information shown in the UI next to a prediction.
+#
+# IMPORTANT
+# ---------
+# * The classes actually predicted by the system come from the trained model
+#   (models/registry.json -> class_names), never from this file.
+# * This file only *decorates* class names with human-readable information.
+# * Entries flagged `demo_placeholder: true` are illustrative placeholders used
+#   by mock mode. They contain NO verified agronomic facts. Replace them with
+#   sourced information once the final dataset/cultivar list is known.
+# * `class_name` is matched case-insensitively and ignoring spaces/underscores/dashes,
+#   so a dataset folder `Giza_86` matches "Giza 86".
+
+varieties:
+  - class_name: Giza_86
+    display_name: Giza 86
+    designation: Egyptian long-staple cultivar (placeholder entry)
+    region: Egypt (placeholder)
+    staple_category: unverified
+    characteristics: []
+    notes: Demo placeholder. Fill in sourced fibre characteristics (staple length, micronaire, strength, colour grade) once the dataset is finalised.
+    demo_placeholder: true
+
+  - class_name: Giza_87
+    display_name: Giza 87
+    designation: Egyptian extra-long-staple cultivar (placeholder entry)
+    region: Egypt (placeholder)
+    staple_category: unverified
+    characteristics: []
+    notes: Demo placeholder. No verified data entered.
+    demo_placeholder: true
+
+  - class_name: Giza_90
+    display_name: Giza 90
+    designation: Egyptian cultivar (placeholder entry)
+    region: Egypt (placeholder)
+    staple_category: unverified
+    characteristics: []
+    notes: Demo placeholder. No verified data entered.
+    demo_placeholder: true
+
+  - class_name: Giza_94
+    display_name: Giza 94
+    designation: Egyptian cultivar (placeholder entry)
+    region: Egypt (placeholder)
+    staple_category: unverified
+    characteristics: []
+    notes: Demo placeholder. No verified data entered.
+    demo_placeholder: true
+
+  - class_name: Giza_96
+    display_name: Giza 96
+    designation: Egyptian cultivar (placeholder entry)
+    region: Egypt (placeholder)
+    staple_category: unverified
+    characteristics: []
+    notes: Demo placeholder. No verified data entered.
+    demo_placeholder: true

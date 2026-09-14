@@ -1,0 +1,11 @@
+{
+  "description": "Demonstration classes used exclusively when MODEL_MODE=mock. These MUST NOT influence trained inference.",
+  "is_mock": true,
+  "class_names": [
+    "Giza_86",
+    "Giza_87",
+    "Giza_90",
+    "Giza_94",
+    "Giza_96"
+  ]
+}

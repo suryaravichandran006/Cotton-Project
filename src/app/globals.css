@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --color-canvas: #f6f7f4;
+  --color-surface: #ffffff;
+  --color-surface-muted: #edf0ec;
+  --color-line: #dce1dc;
+  --color-line-strong: #bcc5be;
+  --color-ink: #142019;
+  --color-ink-soft: #45534b;
+  --color-ink-muted: #68746d;
+  --color-accent: #245b47;
+  --color-accent-strong: #194534;
+  --color-accent-soft: #e1eee8;
+  --color-gold: #9a6b34;
+  --color-gold-soft: #f4eadb;
+  --color-warn: #9a640b;
+  --color-warn-soft: #fbefd1;
+  --color-danger: #a8342b;
+  --color-danger-soft: #f8e5e1;
+  --color-info: #315b8a;
+  --color-info-soft: #e3ebf5;
+
+  --shadow-card: 0 1px 2px rgb(20 32 25 / 0.04), 0 12px 32px -22px rgb(20 32 25 / 0.24);
+  --shadow-lift: 0 28px 70px -38px rgb(20 32 25 / 0.34);
+}
+
+:root {
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-canvas);
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  color: var(--color-ink);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.metric-tabular { font-variant-numeric: tabular-nums; }
+
+.paper-field {
+  background-image:
+    radial-gradient(circle at 12% 8%, rgb(154 107 52 / 0.06), transparent 28rem),
+    radial-gradient(circle at 86% 18%, rgb(36 91 71 / 0.07), transparent 30rem);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgb(20 32 25 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(20 32 25 / 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.cotton-glow {
+  background:
+    radial-gradient(circle at 48% 44%, rgb(255 255 255 / 0.96) 0 12%, transparent 38%),
+    radial-gradient(circle at 32% 55%, rgb(255 253 246 / 0.82), transparent 34%),
+    radial-gradient(circle at 68% 48%, rgb(225 238 232 / 0.72), transparent 42%);
+  filter: blur(18px);
+}
+
+.panel-lift { box-shadow: var(--shadow-lift); }
+
+.architecture-canvas {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,6 @@
+class,precision,recall,f1,support
+Alternaria Leaf Spot,1.0,1.0,1.0,24.0
+Bacterial Blight,1.0,0.9285714285714286,0.9629629629629629,28.0
+Fusarium Wilt,1.0,1.0,1.0,48.0
+Healthy Leaf,1.0,1.0,1.0,26.0
+Verticillium Wilt,0.9555555555555556,1.0,0.9772727272727273,43.0

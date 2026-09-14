@@ -1,0 +1,24 @@
+[project]
+name = "cotton-grade"
+version = "0.1.0"
+description = "Deep learning-based cotton variety identification from raw cotton fibre images"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 160
+target-version = "py310"
+extend-exclude = ["node_modules", ".next", "backend/alembic/versions", "data", "models", "reports"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N"]
+ignore = ["E501", "B008", "N806", "N812", "UP007"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ml", "backend"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+markers = ["torch: requires PyTorch/timm to be installed"]

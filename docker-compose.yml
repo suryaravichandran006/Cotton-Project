@@ -1,0 +1,65 @@
+# Cotton Grade — local container stack
+#   docker compose up --build                 # frontend :3000 + backend :8000 (SQLite, mock mode)
+#   docker compose --profile postgres up      # additionally start PostgreSQL and point the backend at it
+#   INSTALL_ML=true MODEL_MODE=trained docker compose up --build   # trained mode (needs an exported model under models/)
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        INSTALL_ML: ${INSTALL_ML:-false}
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      MODEL_MODE: ${MODEL_MODE:-mock}
+      MODEL_REGISTRY_PATH: models/registry.json
+      MODEL_DEVICE: ${MODEL_DEVICE:-cpu}
+      UNKNOWN_THRESHOLD: ${UNKNOWN_THRESHOLD:-0.6}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/backend/storage/cottonvision.db}
+      UPLOAD_DIR: /app/backend/storage/uploads
+      GRADCAM_DIR: /app/backend/storage/gradcam
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-10}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_JSON: "true"
+    volumes:
+      - backend-storage:/app/backend/storage
+      - ./models:/app/models:ro
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      # Browser requests go through the Next.js proxy, which forwards to the backend service.
+      BACKEND_INTERNAL_URL: http://backend:8000
+      NEXT_PUBLIC_API_URL: ""
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: cottonvision
+      POSTGRES_PASSWORD: cottonvision
+      POSTGRES_DB: cottonvision
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  backend-storage:
+  postgres-data:

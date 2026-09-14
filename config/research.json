@@ -1,0 +1,209 @@
+{
+  "project": {
+    "name": "Cotton Grade",
+    "title": "Progressive Domain-Adaptive Transfer Learning for Fine-Grained Cotton Cultivar Identification",
+    "research_question": "Can a progressively trained vision model help small cotton and textile retailers identify raw cotton cultivar from a single RGB photograph more reliably than direct ImageNet transfer?",
+    "hypothesis": "A backbone progressively adapted from generic ImageNet features to cotton-specific leaf and seed representations may learn more useful texture and morphology features before final fine-tuning on limited raw cotton fibre data.",
+    "primary_architecture": "convnext_tiny",
+    "deployment_note": "Leaf and seed classifiers are completed training stages only. Production inference will load only the final raw-cotton model after the final stage is trained."
+  },
+  "datasets": [
+    {
+      "id": "leaf",
+      "stage": 1,
+      "name": "Cotton Leaf Image Dataset for Disease Classification",
+      "domain": "Cotton leaf disease / health",
+      "images": 1373,
+      "used_images": 1124,
+      "classes": 5,
+      "label_type": "Alternaria Leaf Spot / Bacterial Blight / Fusarium Wilt / Healthy Leaf / Verticillium Wilt",
+      "access": "open",
+      "status": "trained",
+      "source_url": "https://doi.org/10.17632/t9hgvk2h9p.1",
+      "source_scope": "1,373 original RGB images were ingested. Exact-duplicate cleaning retained 1,124 unique, non-conflicting labelled images for Cotton Grade.",
+      "purpose": "Move ImageNet features into a real cotton-leaf visual domain and learn cotton morphology, disease patterns and fine surface texture before seed adaptation.",
+      "data_dir": "data/stages/leaf"
+    },
+    {
+      "id": "seed",
+      "stage": 2,
+      "name": "Cotton Seed Quality Dataset — 450-image evaluation set",
+      "domain": "Cotton seed condition",
+      "images": 450,
+      "used_images": 450,
+      "classes": 3,
+      "label_type": "broken / cracked / intact cotton seed",
+      "access": "open",
+      "status": "trained",
+      "source_url": "https://doi.org/10.1371/journal.pone.0273057.s001",
+      "source_scope": "The paper reports 4,419 cropped seed images for model development; Cotton Grade uses the publicly downloadable 450-image S1 evaluation set (150 per class).",
+      "purpose": "Further specialize the leaf-adapted backbone toward compact cotton structures, local texture, boundaries and surface irregularities.",
+      "data_dir": "data/stages/seed"
+    },
+    {
+      "id": "final",
+      "stage": 3,
+      "name": "CATGO Egyptian Cotton Fibre Dataset",
+      "domain": "Raw / ginned cotton lint",
+      "images": 3447,
+      "used_images": 0,
+      "classes": 5,
+      "label_type": "cotton cultivars (Giza 86, 87, 90, 94, 96)",
+      "access": "author_request",
+      "status": "access_pending",
+      "source_url": "https://www.mdpi.com/2624-7402/7/5/127",
+      "source_scope": "Candidate final target dataset; access and final training are still pending.",
+      "purpose": "Final target domain for cultivar classification from RGB photographs of actual ginned cotton fibre.",
+      "data_dir": "data/stages/final"
+    }
+  ],
+  "training_stages": [
+    {
+      "id": "leaf",
+      "label": "Intermediate Model 1",
+      "title": "Cotton Leaf Adaptation",
+      "initialization": "ImageNet-1K",
+      "dataset_id": "leaf",
+      "output_checkpoint": "models/checkpoints/pt_progressive_leaf/best.pt",
+      "retain": "feature backbone",
+      "discard": "5-class leaf disease/health classifier head"
+    },
+    {
+      "id": "seed",
+      "label": "Intermediate Model 2",
+      "title": "Cotton Seed Adaptation",
+      "initialization": "leaf checkpoint backbone",
+      "dataset_id": "seed",
+      "output_checkpoint": "models/checkpoints/pt_progressive_seed/best.pt",
+      "retain": "feature backbone",
+      "discard": "3-class seed-condition classifier head"
+    },
+    {
+      "id": "final",
+      "label": "Final Model",
+      "title": "Raw Cotton Cultivar Classifier",
+      "initialization": "seed checkpoint backbone",
+      "dataset_id": "final",
+      "output_checkpoint": "models/checkpoints/pt_progressive_final/best.pt",
+      "retain": "entire final classifier for deployment",
+      "discard": "nothing after model selection"
+    }
+  ],
+  "stage_results": [
+    {
+      "id": "leaf",
+      "status": "complete",
+      "experiment_name": "pt_progressive_leaf",
+      "architecture": "ConvNeXt-Tiny",
+      "initialization": "ImageNet-1K pretrained weights",
+      "dataset_images": 1373,
+      "training_ready_images": 1124,
+      "split": { "train": 786, "val": 169, "test": 169 },
+      "best_epoch": 14,
+      "best_val_macro_f1": 0.9941,
+      "test": {
+        "samples": 169,
+        "correct": 167,
+        "accuracy": 0.9881656804733728,
+        "balanced_accuracy": 0.9857142857142858,
+        "macro_precision": 0.9911111111111112,
+        "macro_recall": 0.9857142857142858,
+        "macro_f1": 0.9880471380471381,
+        "weighted_f1": 0.9880810073117766,
+        "top2_accuracy": 1.0,
+        "mean_max_probability": 0.9146323800086975,
+        "nll": 0.11902131140232086
+      },
+      "per_class": [
+        { "name": "Alternaria Leaf Spot", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 24 },
+        { "name": "Bacterial Blight", "precision": 1.0, "recall": 0.9285714285714286, "f1": 0.9629629629629629, "support": 28 },
+        { "name": "Fusarium Wilt", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 48 },
+        { "name": "Healthy Leaf", "precision": 1.0, "recall": 1.0, "f1": 1.0, "support": 26 },
+        { "name": "Verticillium Wilt", "precision": 0.9555555555555556, "recall": 1.0, "f1": 0.9772727272727273, "support": 43 }
+      ],
+      "transfer": {
+        "source": "ImageNet-1K",
+        "destination": "leaf",
+        "checkpoint": "models/checkpoints/pt_progressive_leaf/best.pt"
+      },
+      "caveat": "The source provides no sample_id metadata, so the reported split is stratified at image level. Before splitting, 199 same-class duplicate copies and 50 ambiguous cross-class images from 25 exact-duplicate groups were excluded."
+    },
+    {
+      "id": "seed",
+      "status": "complete",
+      "experiment_name": "pt_progressive_seed",
+      "architecture": "ConvNeXt-Tiny",
+      "initialization": "Leaf-stage best checkpoint",
+      "dataset_images": 450,
+      "training_ready_images": 450,
+      "split": { "train": 315, "val": 67, "test": 68 },
+      "best_epoch": 9,
+      "best_val_macro_f1": 0.9552,
+      "early_stopped_epoch": 17,
+      "test": {
+        "samples": 68,
+        "correct": 65,
+        "accuracy": 0.9558823529411765,
+        "balanced_accuracy": 0.955862977602108,
+        "macro_precision": 0.9581818181818181,
+        "macro_recall": 0.955862977602108,
+        "macro_f1": 0.9561369509043928,
+        "weighted_f1": 0.9558339033287733,
+        "top2_accuracy": 1.0,
+        "mean_max_probability": 0.9250617623329163,
+        "nll": 0.20733512938022614
+      },
+      "per_class": [
+        { "name": "Broken cotton seed", "precision": 1.0, "recall": 0.9545454545454546, "f1": 0.9767441860465116, "support": 22 },
+        { "name": "Cracked cotton seed", "precision": 0.92, "recall": 1.0, "f1": 0.9583333333333334, "support": 23 },
+        { "name": "Intact cotton seed", "precision": 0.9545454545454546, "recall": 0.9130434782608695, "f1": 0.9333333333333333, "support": 23 }
+      ],
+      "transfer": {
+        "source": "pt_progressive_leaf/best.pt",
+        "destination": "seed",
+        "checkpoint": "models/checkpoints/pt_progressive_seed/best.pt",
+        "transferred_tensors": 180,
+        "skipped_task_tensors": 2
+      },
+      "caveat": "The downloadable S1 evaluation set has no sample_id metadata, so the reported split is stratified at image level. Audit found zero corrupt files and zero exact duplicates. Average-hash near-duplicate flags were not treated as proof of duplication because the controlled seed images have highly similar framing and backgrounds."
+    }
+  ],
+  "experiment_routes": [
+    {
+      "id": "baseline",
+      "label": "Direct baseline",
+      "path": ["ImageNet", "Raw Cotton"],
+      "question": "How strong is conventional ImageNet transfer learning on the final task?"
+    },
+    {
+      "id": "leaf_to_final",
+      "label": "Leaf transfer",
+      "path": ["ImageNet", "Leaves", "Raw Cotton"],
+      "question": "Does cotton-specific leaf adaptation improve the final classifier?"
+    },
+    {
+      "id": "seed_to_final",
+      "label": "Seed transfer",
+      "path": ["ImageNet", "Seeds", "Raw Cotton"],
+      "question": "Does seed-domain adaptation improve fine texture recognition on lint?"
+    },
+    {
+      "id": "progressive",
+      "label": "Progressive transfer",
+      "path": ["ImageNet", "Leaves", "Seeds", "Raw Cotton"],
+      "question": "Does the full progressive cotton-domain sequence outperform direct transfer?"
+    }
+  ],
+  "evaluation": {
+    "primary_metric": "macro_f1",
+    "metrics": ["macro_f1", "balanced_accuracy", "accuracy", "per_class_recall", "ece", "inference_latency_ms"],
+    "data_efficiency_fractions": [0.25, 0.5, 0.75, 1.0],
+    "rules": [
+      "Use the exact same final train/validation/test specimen split across every transfer route.",
+      "Fit calibration on validation data only; never tune on the final test set.",
+      "Never split augmented views of the same source image or physical specimen across partitions.",
+      "Do not publish placeholder or mock metrics as experimental results.",
+      "Intermediate leaf and seed metrics must be disclosed as image-level evaluations because their public sources do not provide specimen identifiers."
+    ]
+  }
+}

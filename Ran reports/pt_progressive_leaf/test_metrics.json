@@ -1,0 +1,173 @@
+{
+  "num_samples": 169,
+  "num_classes": 5,
+  "accuracy": 0.9881656804733728,
+  "balanced_accuracy": 0.9857142857142858,
+  "macro_precision": 0.9911111111111112,
+  "macro_recall": 0.9857142857142858,
+  "macro_f1": 0.9880471380471381,
+  "weighted_f1": 0.9880810073117766,
+  "per_class": {
+    "Alternaria Leaf Spot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 24
+    },
+    "Bacterial Blight": {
+      "precision": 1.0,
+      "recall": 0.9285714285714286,
+      "f1": 0.9629629629629629,
+      "support": 28
+    },
+    "Fusarium Wilt": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 48
+    },
+    "Healthy Leaf": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 26
+    },
+    "Verticillium Wilt": {
+      "precision": 0.9555555555555556,
+      "recall": 1.0,
+      "f1": 0.9772727272727273,
+      "support": 43
+    }
+  },
+  "confusion_matrix": [
+    [
+      24,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      26,
+      0,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      48,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      26,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      43
+    ]
+  ],
+  "confusion_matrix_normalized": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.9286,
+      0.0,
+      0.0,
+      0.0714
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "class_names": [
+    "Alternaria Leaf Spot",
+    "Bacterial Blight",
+    "Fusarium Wilt",
+    "Healthy Leaf",
+    "Verticillium Wilt"
+  ],
+  "top2_accuracy": 1.0,
+  "top3_accuracy": 1.0,
+  "mean_max_probability": 0.9146323800086975,
+  "nll": 0.11902131140232086,
+  "classification_report": {
+    "Alternaria Leaf Spot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 24.0
+    },
+    "Bacterial Blight": {
+      "precision": 1.0,
+      "recall": 0.9285714285714286,
+      "f1-score": 0.9629629629629629,
+      "support": 28.0
+    },
+    "Fusarium Wilt": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 48.0
+    },
+    "Healthy Leaf": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 26.0
+    },
+    "Verticillium Wilt": {
+      "precision": 0.9555555555555556,
+      "recall": 1.0,
+      "f1-score": 0.9772727272727273,
+      "support": 43.0
+    },
+    "accuracy": 0.9881656804733728,
+    "macro avg": {
+      "precision": 0.9911111111111112,
+      "recall": 0.9857142857142858,
+      "f1-score": 0.9880471380471381,
+      "support": 169.0
+    },
+    "weighted avg": {
+      "precision": 0.9886916502301119,
+      "recall": 0.9881656804733728,
+      "f1-score": 0.9880810073117766,
+      "support": 169.0
+    }
+  },
+  "loss": NaN
+}

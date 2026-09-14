@@ -1,0 +1,17 @@
+# Full ML stack (training, evaluation, trained-mode inference).
+# Install PyTorch first for your platform — see docs/TRAINING.md §3:
+#   CUDA / CPU:   https://pytorch.org/get-started/locally/
+#   Apple Silicon: pip install torch torchvision   (MPS is built in)
+torch>=2.2
+torchvision>=0.17
+timm>=0.9.12
+albumentations>=1.4
+scikit-learn>=1.4
+numpy>=1.26
+pandas>=2.1
+pillow>=10.2
+opencv-python-headless>=4.9
+matplotlib>=3.8
+pyyaml>=6.0
+tensorboard>=2.15
+onnx>=1.15 ; python_version < "3.13"

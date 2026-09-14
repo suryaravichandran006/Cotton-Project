@@ -1,0 +1,49 @@
+# ---- secrets / env
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# ---- node / next
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+
+# ---- python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+*.egg-info/
+
+# ---- data, models, artefacts (large / generated)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+models/checkpoints/*
+models/exports/*
+!models/checkpoints/.gitkeep
+!models/exports/.gitkeep
+reports/
+backend/storage/
+*.pt
+*.pth
+*.onnx
+*.db
+*.db-wal
+*.db-shm
+
+# ---- os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

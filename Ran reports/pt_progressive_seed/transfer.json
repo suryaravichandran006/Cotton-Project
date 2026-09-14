@@ -1,0 +1,19 @@
+{
+  "checkpoint": "/content/Cotton-Project/models/checkpoints/pt_progressive_leaf/best.pt",
+  "source_architecture": "convnext_tiny",
+  "source_classes": [
+    "Alternaria Leaf Spot",
+    "Bacterial Blight",
+    "Fusarium Wilt",
+    "Healthy Leaf",
+    "Verticillium Wilt"
+  ],
+  "loaded_tensors": 180,
+  "skipped_tensors": 2,
+  "missing_keys": [
+    "head.fc.weight",
+    "head.fc.bias"
+  ],
+  "unexpected_keys": [],
+  "transfer_source": "pt_progressive_leaf"
+}

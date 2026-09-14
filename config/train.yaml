@@ -1,0 +1,48 @@
+# Cotton Grade — training configuration
+# Every value here can be overridden on the command line, e.g.
+#   python -m ml.train --config config/train.yaml --architecture convnext_tiny --epochs 40
+#
+# Architectures available: resnet50 | efficientnetv2_s | convnext_tiny | mobilenetv3_large
+# (see config/models.yaml and ml/models/factory.py)
+
+experiment_name: baseline          # reports/<experiment_name>/, models/checkpoints/<experiment_name>/
+architecture: convnext_tiny
+pretrained: true                   # ImageNet-pretrained backbone (transfer learning)
+
+# ---- data ---------------------------------------------------------------
+data_dir: data/raw                 # class-per-folder dataset root (see docs/DATASET.md)
+metadata_csv: null                 # optional CSV with image_path,class_name,sample_id,batch_id,source,capture_device
+splits_dir: data/processed/splits  # train.csv / val.csv / test.csv / class_map.json are written here
+train_ratio: 0.70
+val_ratio: 0.15
+test_ratio: 0.15
+group_by: auto                     # auto | none | sample_id | batch_id | source  (auto = sample_id if present)
+image_size: 224
+num_workers: 4
+augmentation_preset: default       # key inside config/augmentation.yaml
+enable_lighting_aug: false       # lighting augmentations kept disabled until ablation experiments justify them
+
+# ---- optimisation -------------------------------------------------------
+epochs: 30
+batch_size: 32
+learning_rate: 0.0003
+weight_decay: 0.05
+optimizer: adamw                   # adamw | sgd
+scheduler: cosine                  # cosine | plateau | none
+warmup_epochs: 1
+momentum: 0.9                      # SGD only
+dropout: 0.2
+label_smoothing: 0.1
+class_weights: false               # inverse-frequency class weights in the loss
+early_stopping_patience: 8         # epochs without val macro-F1 improvement
+monitor_metric: macro_f1           # metric used for best-checkpoint selection & early stopping
+mixed_precision: true              # used only when CUDA is available
+grad_clip_norm: 1.0
+
+# ---- reproducibility / output ------------------------------------------
+seed: 42
+deterministic: true
+checkpoint_dir: models/checkpoints
+reports_dir: reports
+tensorboard: true
+log_every_n_steps: 20

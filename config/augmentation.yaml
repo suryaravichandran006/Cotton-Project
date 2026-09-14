@@ -1,0 +1,119 @@
+# Training augmentation presets (Albumentations).
+# Deliberately conservative: cotton fibre texture, colour and lustre are the
+# discriminative signals, so we avoid transformations that destroy them.
+# Validation/test preprocessing is always deterministic (see ml/data/preprocessing.py).
+
+presets:
+  none:
+    horizontal_flip: 0.0
+    vertical_flip: 0.0
+    rotate_limit: 0
+    rotate_p: 0.0
+    random_crop_scale: [1.0, 1.0]
+    brightness_limit: 0.0
+    contrast_limit: 0.0
+    color_p: 0.0
+    hue_shift_limit: 0
+    sat_shift_limit: 0
+    val_shift_limit: 0
+    hsv_p: 0.0
+    shadow_p: 0.0
+    blur_p: 0.0
+    blur_limit: 3
+    noise_p: 0.0
+    affine_p: 0.0
+    affine_scale: [1.0, 1.0]
+    affine_translate: 0.0
+    affine_shear: 0
+
+  light:
+    horizontal_flip: 0.5
+    vertical_flip: 0.5
+    rotate_limit: 10
+    rotate_p: 0.3
+    random_crop_scale: [0.85, 1.0]
+    brightness_limit: 0.10
+    contrast_limit: 0.10
+    color_p: 0.3
+    hue_shift_limit: 3
+    sat_shift_limit: 10
+    val_shift_limit: 10
+    hsv_p: 0.2
+    shadow_p: 0.0
+    blur_p: 0.0
+    blur_limit: 3
+    noise_p: 0.0
+    affine_p: 0.0
+    affine_scale: [1.0, 1.0]
+    affine_translate: 0.0
+    affine_shear: 0
+
+  default:
+    horizontal_flip: 0.5
+    vertical_flip: 0.5          # loose fibre has no canonical "up", so vertical flips are valid
+    rotate_limit: 15
+    rotate_p: 0.4
+    random_crop_scale: [0.75, 1.0]
+    brightness_limit: 0.15
+    contrast_limit: 0.15
+    color_p: 0.5
+    hue_shift_limit: 5          # conservative: colour cast is a cultivar cue
+    sat_shift_limit: 15
+    val_shift_limit: 10
+    hsv_p: 0.3
+    shadow_p: 0.2
+    blur_p: 0.15
+    blur_limit: 3
+    noise_p: 0.15
+    affine_p: 0.3
+    affine_scale: [0.9, 1.1]
+    affine_translate: 0.05
+    affine_shear: 5
+
+  strong:
+    horizontal_flip: 0.5
+    vertical_flip: 0.5
+    rotate_limit: 30
+    rotate_p: 0.5
+    random_crop_scale: [0.6, 1.0]
+    brightness_limit: 0.25
+    contrast_limit: 0.25
+    color_p: 0.6
+    hue_shift_limit: 8
+    sat_shift_limit: 25
+    val_shift_limit: 15
+    hsv_p: 0.4
+    shadow_p: 0.3
+    blur_p: 0.25
+    blur_limit: 5
+    noise_p: 0.25
+    affine_p: 0.4
+    affine_scale: [0.85, 1.15]
+    affine_translate: 0.08
+    affine_shear: 8
+
+  with_lighting:
+    # Dedicated preset for scientific ablation studies comparing baseline vs lighting perturbations
+    horizontal_flip: 0.5
+    vertical_flip: 0.5
+    rotate_limit: 15
+    rotate_p: 0.4
+    random_crop_scale: [0.75, 1.0]
+    brightness_limit: 0.15
+    contrast_limit: 0.15
+    color_p: 0.5
+    tone_curve_scale: 0.1
+    tone_curve_p: 0.3
+    hue_shift_limit: 5
+    sat_shift_limit: 15
+    val_shift_limit: 10
+    hsv_p: 0.3
+    shadow_p: 0.2
+    blur_p: 0.15
+    blur_limit: 3
+    noise_p: 0.15
+    affine_p: 0.3
+    affine_scale: [0.9, 1.1]
+    affine_translate: 0.05
+    affine_shear: 5
+

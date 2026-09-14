@@ -1,0 +1,306 @@
+{
+  "experiment_name": "pt_progressive_seed",
+  "architecture": "convnext_tiny",
+  "num_classes": 3,
+  "class_names": [
+    "Broken cotton seed",
+    "Cracked cotton seed",
+    "Intact cotton seed"
+  ],
+  "device": "cuda",
+  "best_epoch": 9,
+  "best_val_metric": {
+    "macro_f1": 0.9552188552188552
+  },
+  "epochs_run": 17,
+  "train_seconds": 88.81205664100025,
+  "parameters": 27822435,
+  "calibration": {
+    "temperature": 0.8759180152182608,
+    "nll_before": 0.21174802951763988,
+    "nll_after": 0.2067945957463702,
+    "ece_before": 0.025406957927517883,
+    "ece_after": 0.020917008214382977,
+    "reliability_before": [
+      {
+        "bin_lower": 0.0,
+        "bin_upper": 0.06666666666666667,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.06666666666666667,
+        "bin_upper": 0.13333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.13333333333333333,
+        "bin_upper": 0.2,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.2,
+        "bin_upper": 0.26666666666666666,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.26666666666666666,
+        "bin_upper": 0.3333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.3333333333333333,
+        "bin_upper": 0.4,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.4,
+        "bin_upper": 0.4666666666666667,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.4666666666666667,
+        "bin_upper": 0.5333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.5333333333333333,
+        "bin_upper": 0.6,
+        "count": 1,
+        "confidence": 0.5837457325532801,
+        "accuracy": 1.0
+      },
+      {
+        "bin_lower": 0.6,
+        "bin_upper": 0.6666666666666666,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.6666666666666666,
+        "bin_upper": 0.7333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.7333333333333333,
+        "bin_upper": 0.8,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.8,
+        "bin_upper": 0.8666666666666667,
+        "count": 2,
+        "confidence": 0.8487419575184332,
+        "accuracy": 1.0
+      },
+      {
+        "bin_lower": 0.8666666666666667,
+        "bin_upper": 0.9333333333333333,
+        "count": 35,
+        "confidence": 0.922604002292208,
+        "accuracy": 0.9428571428571428
+      },
+      {
+        "bin_lower": 0.9333333333333333,
+        "bin_upper": 1.0,
+        "count": 29,
+        "confidence": 0.9560470376220302,
+        "accuracy": 0.9655172413793104
+      }
+    ],
+    "reliability_after": [
+      {
+        "bin_lower": 0.0,
+        "bin_upper": 0.06666666666666667,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.06666666666666667,
+        "bin_upper": 0.13333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.13333333333333333,
+        "bin_upper": 0.2,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.2,
+        "bin_upper": 0.26666666666666666,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.26666666666666666,
+        "bin_upper": 0.3333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.3333333333333333,
+        "bin_upper": 0.4,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.4,
+        "bin_upper": 0.4666666666666667,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.4666666666666667,
+        "bin_upper": 0.5333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.5333333333333333,
+        "bin_upper": 0.6,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.6,
+        "bin_upper": 0.6666666666666666,
+        "count": 1,
+        "confidence": 0.6073304792243527,
+        "accuracy": 1.0
+      },
+      {
+        "bin_lower": 0.6666666666666666,
+        "bin_upper": 0.7333333333333333,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.7333333333333333,
+        "bin_upper": 0.8,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.8,
+        "bin_upper": 0.8666666666666667,
+        "count": 0,
+        "confidence": 0.0,
+        "accuracy": 0.0
+      },
+      {
+        "bin_lower": 0.8666666666666667,
+        "bin_upper": 0.9333333333333333,
+        "count": 4,
+        "confidence": 0.9005667221644051,
+        "accuracy": 1.0
+      },
+      {
+        "bin_lower": 0.9333333333333333,
+        "bin_upper": 1.0,
+        "count": 62,
+        "confidence": 0.9614683373910586,
+        "accuracy": 0.9516129032258065
+      }
+    ]
+  },
+  "test": {
+    "accuracy": 0.9558823529411765,
+    "balanced_accuracy": 0.955862977602108,
+    "macro_f1": 0.9561369509043928,
+    "weighted_f1": 0.9558339033287733,
+    "top2_accuracy": 1.0,
+    "top3_accuracy": null
+  },
+  "splits": {
+    "seed": 42,
+    "group_key": null,
+    "class_names": [
+      "Broken cotton seed",
+      "Cracked cotton seed",
+      "Intact cotton seed"
+    ],
+    "sizes": {
+      "train": 315,
+      "val": 67,
+      "test": 68
+    },
+    "per_class": {
+      "train": {
+        "Broken cotton seed": 105,
+        "Cracked cotton seed": 105,
+        "Intact cotton seed": 105
+      },
+      "val": {
+        "Broken cotton seed": 23,
+        "Cracked cotton seed": 22,
+        "Intact cotton seed": 22
+      },
+      "test": {
+        "Broken cotton seed": 22,
+        "Cracked cotton seed": 23,
+        "Intact cotton seed": 23
+      }
+    },
+    "specimen_leakage_prevented": false,
+    "specimen_leakage_risk": "HIGH - FOLDER ONLY DATASET",
+    "guidance": "sample_id required for guaranteed specimen-level isolation",
+    "specimen_leakage_warning": "FOLDER-ONLY WARNING: Folder-based datasets cannot guarantee specimen-level leakage prevention. For scientifically valid evaluation, metadata with sample_id is required."
+  },
+  "lineage": {
+    "transfer_source": "pt_progressive_leaf",
+    "init_checkpoint": "models/checkpoints/pt_progressive_leaf/best.pt",
+    "transfer": {
+      "checkpoint": "/content/Cotton-Project/models/checkpoints/pt_progressive_leaf/best.pt",
+      "source_architecture": "convnext_tiny",
+      "source_classes": [
+        "Alternaria Leaf Spot",
+        "Bacterial Blight",
+        "Fusarium Wilt",
+        "Healthy Leaf",
+        "Verticillium Wilt"
+      ],
+      "loaded_tensors": 180,
+      "skipped_tensors": 2,
+      "missing_keys": [
+        "head.fc.weight",
+        "head.fc.bias"
+      ],
+      "unexpected_keys": []
+    }
+  },
+  "git_commit": "abf7f9749a9fcc0e1bab43811270f75301836602",
+  "checkpoint": "/content/Cotton-Project/models/checkpoints/pt_progressive_seed/best.pt"
+}

@@ -1,0 +1,50 @@
+# Benchmark candidates for Cotton Grade.
+# The "timm_name" is passed to timm.create_model(); "gradcam_layer" is the dotted
+# attribute path of the last convolutional stage used for Grad-CAM.
+# Per-architecture overrides are merged on top of config/train.yaml when
+# --architecture is given.
+
+architectures:
+  resnet50:
+    timm_name: resnet50
+    role: baseline
+    description: Classic residual CNN (He et al., 2016). Strong, well-understood baseline.
+    gradcam_layer: layer4
+    overrides:
+      learning_rate: 0.0005
+      weight_decay: 0.0001
+      optimizer: sgd
+      dropout: 0.0
+
+  efficientnetv2_s:
+    timm_name: tf_efficientnetv2_s
+    role: strong_alternative
+    description: EfficientNetV2-S (Tan & Le, 2021). Compound-scaled, good accuracy/compute trade-off.
+    gradcam_layer: conv_head
+    overrides:
+      learning_rate: 0.0003
+      dropout: 0.3
+
+  convnext_tiny:
+    timm_name: convnext_tiny
+    role: primary_candidate
+    description: ConvNeXt-Tiny (Liu et al., 2022). Modernised ConvNet, strong on texture-heavy data.
+    gradcam_layer: stages.3
+    overrides:
+      learning_rate: 0.0002
+      weight_decay: 0.05
+
+  mobilenetv3_large:
+    timm_name: mobilenetv3_large_100
+    role: mobile_candidate
+    description: MobileNetV3-Large (Howard et al., 2019). Lightweight, suited for on-device inference.
+    gradcam_layer: blocks.6
+    overrides:
+      learning_rate: 0.0005
+      dropout: 0.2
+
+benchmark_order:
+  - resnet50
+  - efficientnetv2_s
+  - convnext_tiny
+  - mobilenetv3_large

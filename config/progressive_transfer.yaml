@@ -1,0 +1,56 @@
+# Progressive domain-adaptive transfer-learning plan.
+# This file does not download datasets. Put each selected dataset in the stage
+# directory below, audit/split it, then use `python -m ml.progressive`.
+
+architecture: convnext_tiny
+base_train_config: config/train.yaml
+seed: 42
+reuse_existing: true
+
+stages:
+  leaf:
+    data_dir: data/stages/leaf
+    metadata_csv: null
+    splits_dir: data/processed/splits/leaf
+    experiment_name: pt_progressive_leaf
+    epochs: 20
+    batch_size: 32
+    learning_rate: 0.0002
+    augmentation_preset: default
+
+  seed:
+    data_dir: data/stages/seed
+    metadata_csv: null
+    splits_dir: data/processed/splits/seed
+    experiment_name: pt_progressive_seed
+    epochs: 20
+    batch_size: 32
+    learning_rate: 0.00015
+    augmentation_preset: default
+
+  final:
+    data_dir: data/stages/final
+    metadata_csv: data/stages/final/metadata.csv
+    splits_dir: data/processed/splits/final
+    experiment_name: pt_progressive_final
+    epochs: 30
+    batch_size: 32
+    learning_rate: 0.0001
+    augmentation_preset: default
+
+routes:
+  baseline:
+    - final
+  leaf_to_final:
+    - leaf
+    - final
+  seed_to_final:
+    - seed
+    - final
+  progressive:
+    - leaf
+    - seed
+    - final
+
+# The final split directory is intentionally shared across all routes. That
+# ensures every route is compared against exactly the same untouched test set.

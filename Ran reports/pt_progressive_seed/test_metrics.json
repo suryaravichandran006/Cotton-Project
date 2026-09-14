@@ -1,0 +1,107 @@
+{
+  "num_samples": 68,
+  "num_classes": 3,
+  "accuracy": 0.9558823529411765,
+  "balanced_accuracy": 0.955862977602108,
+  "macro_precision": 0.9581818181818181,
+  "macro_recall": 0.955862977602108,
+  "macro_f1": 0.9561369509043928,
+  "weighted_f1": 0.9558339033287733,
+  "per_class": {
+    "Broken cotton seed": {
+      "precision": 1.0,
+      "recall": 0.9545454545454546,
+      "f1": 0.9767441860465116,
+      "support": 22
+    },
+    "Cracked cotton seed": {
+      "precision": 0.92,
+      "recall": 1.0,
+      "f1": 0.9583333333333334,
+      "support": 23
+    },
+    "Intact cotton seed": {
+      "precision": 0.9545454545454546,
+      "recall": 0.9130434782608695,
+      "f1": 0.9333333333333333,
+      "support": 23
+    }
+  },
+  "confusion_matrix": [
+    [
+      21,
+      0,
+      1
+    ],
+    [
+      0,
+      23,
+      0
+    ],
+    [
+      0,
+      2,
+      21
+    ]
+  ],
+  "confusion_matrix_normalized": [
+    [
+      0.9545,
+      0.0,
+      0.0455
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.087,
+      0.913
+    ]
+  ],
+  "class_names": [
+    "Broken cotton seed",
+    "Cracked cotton seed",
+    "Intact cotton seed"
+  ],
+  "top2_accuracy": 1.0,
+  "top3_accuracy": null,
+  "mean_max_probability": 0.9250617623329163,
+  "nll": 0.20733512938022614,
+  "classification_report": {
+    "Broken cotton seed": {
+      "precision": 1.0,
+      "recall": 0.9545454545454546,
+      "f1-score": 0.9767441860465116,
+      "support": 22.0
+    },
+    "Cracked cotton seed": {
+      "precision": 0.92,
+      "recall": 1.0,
+      "f1-score": 0.9583333333333334,
+      "support": 23.0
+    },
+    "Intact cotton seed": {
+      "precision": 0.9545454545454546,
+      "recall": 0.9130434782608695,
+      "f1-score": 0.9333333333333333,
+      "support": 23.0
+    },
+    "accuracy": 0.9558823529411765,
+    "macro avg": {
+      "precision": 0.9581818181818181,
+      "recall": 0.955862977602108,
+      "f1-score": 0.9561369509043928,
+      "support": 68.0
+    },
+    "weighted avg": {
+      "precision": 0.957566844919786,
+      "recall": 0.9558823529411765,
+      "f1-score": 0.9558339033287733,
+      "support": 68.0
+    }
+  },
+  "loss": NaN
+}

@@ -1,0 +1,71 @@
+{
+  "description": "Optional agronomic and morphological display enrichment for cotton varieties. All fields except class_id are optional.",
+  "provenance_policy": "Only include verified agronomic metrics with explicit scientific source attribution. Placeholders must have demo_placeholder: true.",
+  "varieties": [
+    {
+      "class_id": "Giza_86",
+      "display_name": "Giza 86",
+      "scientific_name": "Gossypium barbadense",
+      "region": "Egypt (Nile Delta)",
+      "staple_category": "Long Staple",
+      "staple_length_mm": 33.0,
+      "micronaire": 4.3,
+      "strength_g_tex": 44.5,
+      "description": "Widely cultivated Egyptian long-staple variety known for high yield, fiber brightness, and spinning consistency.",
+      "source": "Cotton Research Institute (CRI) Giza Technical Bulletin (Demonstration metadata)",
+      "demo_placeholder": true
+    },
+    {
+      "class_id": "Giza_87",
+      "display_name": "Giza 87",
+      "scientific_name": "Gossypium barbadense",
+      "region": "Egypt",
+      "staple_category": "Extra Long Staple (ELS)",
+      "staple_length_mm": 35.5,
+      "micronaire": 3.1,
+      "strength_g_tex": 47.0,
+      "description": "Premium extra-long staple Egyptian variety with ultra-fine micronaire and exceptional tensile strength.",
+      "source": "CRI Technical Evaluation Reports (Demonstration metadata)",
+      "demo_placeholder": true
+    },
+    {
+      "class_id": "Giza_90",
+      "display_name": "Giza 90",
+      "scientific_name": "Gossypium barbadense",
+      "region": "Upper Egypt",
+      "staple_category": "Long Staple",
+      "staple_length_mm": 30.5,
+      "micronaire": 4.1,
+      "strength_g_tex": 37.0,
+      "description": "Heat-tolerant long-staple cultivar adapted to Upper Egypt growing conditions.",
+      "source": "CRI Agronomic Characteristics Register (Demonstration metadata)",
+      "demo_placeholder": true
+    },
+    {
+      "class_id": "Giza_94",
+      "display_name": "Giza 94",
+      "scientific_name": "Gossypium barbadense",
+      "region": "Egypt",
+      "staple_category": "Long Staple",
+      "staple_length_mm": 33.5,
+      "micronaire": 4.2,
+      "strength_g_tex": 43.8,
+      "description": "High-yielding commercial variety representing a significant portion of Egyptian cotton exports.",
+      "source": "CRI Technical Bulletin (Demonstration metadata)",
+      "demo_placeholder": true
+    },
+    {
+      "class_id": "Giza_96",
+      "display_name": "Giza 96",
+      "scientific_name": "Gossypium barbadense",
+      "region": "Egypt",
+      "staple_category": "Extra Long Staple (ELS)",
+      "staple_length_mm": 35.0,
+      "micronaire": 3.8,
+      "strength_g_tex": 46.2,
+      "description": "Modern ELS variety offering high yarn tenacity and lustrous appearance.",
+      "source": "CRI Technical Bulletin (Demonstration metadata)",
+      "demo_placeholder": true
+    }
+  ]
+}

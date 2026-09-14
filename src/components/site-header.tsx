@@ -59,7 +59,7 @@ export function SiteHeader() {
               >
                 {item.label}
                 {"wip" in item && item.wip ? (
-                  <span className={cn("rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide", active ? "bg-white/15 text-white" : "bg-gold-soft text-gold")}>WIP</span>
+                  <span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide", active ? "bg-white/15 text-white" : "bg-gold-soft text-gold-strong")}>WIP</span>
                 ) : null}
               </Link>
             );
@@ -91,7 +91,7 @@ export function SiteHeader() {
                 )}
               >
                 {item.label}
-                {"wip" in item && item.wip ? <span className="rounded-full bg-gold-soft px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-gold">WIP</span> : null}
+                {"wip" in item && item.wip ? <span className="rounded-full bg-gold-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gold-strong">WIP</span> : null}
               </Link>
             ))}
           </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowDown } from "lucide-react";
+import Link from "next/link";\nimport { ArrowDown, ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/page-header";
 import { StatusBadge } from "@/components/presentation";
@@ -101,6 +101,10 @@ export default function ProgressPage() {
             <p className="mx-auto mt-8 max-w-3xl text-base leading-7 text-ink-soft">
               {EXPERIMENT_ROUTES.length} routes will be tested. No route is treated as the winner before the final evidence exists.
             </p>
+
+            <Link href="/analyze" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
+              Open final stage <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </Container>
       </section>

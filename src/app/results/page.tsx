@@ -70,15 +70,19 @@ export default function ResultsPage() {
 
       <section className="border-t border-line bg-canvas">
         <Container className="py-16 text-center sm:py-20">
-          <div className="mx-auto max-w-4xl">
-            <p className="text-sm font-semibold text-accent">Scientific boundary</p>
-            <h2 className="font-display mx-auto mt-4 max-w-3xl text-4xl leading-[1.04] text-ink sm:text-5xl">
-              The pipeline is proven. The final hypothesis is not.
+          <div className="mx-auto max-w-5xl">
+            <p className="text-sm font-semibold text-accent">What these results mean</p>
+            <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
+              Strong intermediate evidence. Final comparison still pending.
             </h2>
-            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-ink-soft">
-              These results verify the two intermediate stages. Only the final four-route experiment can show whether progressive transfer improves raw-cotton cultivar recognition.
-            </p>
-            <Link href="/analyze" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
+
+            <div className="mx-auto mt-10 grid max-w-5xl gap-5 md:grid-cols-3">
+              <InterpretationCard label="Proven" text="Leaf training works." />
+              <InterpretationCard label="Proven" text="Leaf → Seed checkpoint transfer works." />
+              <InterpretationCard label="Not proven yet" text="Progressive transfer is better for final raw-cotton grading." pending />
+            </div>
+
+            <Link href="/analyze" className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
               Continue to the final experiment <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -143,5 +147,15 @@ function TransferMetric({ value, label }: { value: string; label: string }) {
       <dt className="text-sm font-semibold text-white/60">{label}</dt>
       <dd className="metric-tabular mt-2 text-5xl font-semibold tracking-[-0.04em] text-white">{value}</dd>
     </div>
+  );
+}
+
+
+function InterpretationCard({ label, text, pending = false }: { label: string; text: string; pending?: boolean }) {
+  return (
+    <article className={pending ? "rounded-2xl border border-gold/30 bg-gold-soft p-6 text-left" : "rounded-2xl border border-line bg-surface p-6 text-left"}>
+      <p className={pending ? "text-sm font-semibold text-gold-strong" : "text-sm font-semibold text-accent"}>{label}</p>
+      <p className="mt-3 text-xl font-semibold leading-8 text-ink">{text}</p>
+    </article>
   );
 }

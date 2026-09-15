@@ -1,36 +1,29 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowDown, ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/page-header";
-import { datasetById, formatCount } from "@/lib/research";
 
-export const metadata: Metadata = { title: "Method" };
+export const metadata: Metadata = { title: "Approach" };
 
-const trainingSteps = [
-  ["Audit", "Remove duplicates and invalid data"],
-  ["Split", "Create fixed train, validation and test sets"],
-  ["Resize", "Convert images to 224 × 224 RGB"],
-  ["Augment", "Apply augmentation to training images only"],
-  ["Train & evaluate", "Fine-tune ConvNeXt-Tiny and measure Macro-F1"],
+const progressivePath = [
+  ["ImageNet", "general visual features"],
+  ["Cotton leaves", "first cotton-domain adaptation"],
+  ["Cotton seeds", "more cotton-specific adaptation"],
+  ["Raw cotton", "final cultivar task"],
 ] as const;
 
-export default function MethodPage() {
-  const leaf = datasetById("leaf");
-  const seed = datasetById("seed");
-  const finalDataset = datasetById("final");
-
+export default function ApproachPage() {
   return (
     <>
       <section className="border-b border-line bg-surface">
         <Container className="py-16 text-center sm:py-20 lg:py-24">
           <div className="mx-auto max-w-5xl">
-            <p className="text-sm font-semibold text-accent">Method</p>
+            <p className="text-sm font-semibold text-accent">Approach</p>
             <h1 className="font-display mx-auto mt-4 max-w-4xl text-5xl leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
-              How we prepare and train the model.
+              Why progressive transfer learning?
             </h1>
             <p className="mx-auto mt-6 max-w-4xl text-lg leading-8 text-ink-soft">
-              We audit and split each dataset, resize images to 224 × 224, augment only the training set, then fine-tune the same ConvNeXt-Tiny backbone and evaluate with Macro-F1.
+              Raw-cotton cultivar data is limited. Instead of relying on one small final dataset, we start with ImageNet knowledge and progressively adapt the same backbone through related cotton domains.
             </p>
           </div>
         </Container>
@@ -39,60 +32,54 @@ export default function MethodPage() {
       <section className="border-b border-line bg-canvas">
         <Container className="py-16 sm:py-20">
           <div className="mx-auto max-w-5xl text-center">
-            <p className="text-sm font-semibold text-accent">Data used</p>
+            <p className="text-sm font-semibold text-accent">The challenge</p>
             <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
-              The model moves from general vision to cotton-specific data.
+              Why not fine-tune directly on raw cotton?
             </h2>
-
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              <DataCard
-                label="Stage 1"
-                title="Cotton leaves"
-                value={formatCount(leaf.used_images ?? leaf.images)}
-                detail={String(leaf.classes) + " classes"}
-                status="Complete"
-              />
-              <DataCard
-                label="Stage 2"
-                title="Cotton seeds"
-                value={formatCount(seed.used_images ?? seed.images)}
-                detail={String(seed.classes) + " classes"}
-                status="Complete"
-              />
-              <DataCard
-                label="Final stage"
-                title="Raw cotton fibre"
-                value={"~" + formatCount(finalDataset.images)}
-                detail={String(finalDataset.classes) + " cultivars"}
-                status="Pending"
-                pending
-              />
-            </div>
-
-            <p className="mx-auto mt-7 max-w-3xl text-base leading-7 text-ink-soft">
-              ConvNeXt-Tiny starts from ImageNet-pretrained weights, then adapts through the cotton datasets stage by stage.
+            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-ink-soft">
+              With limited labelled data, direct fine-tuning has less cotton-specific evidence to learn from and can overfit the final dataset.
             </p>
+
+            <div className="mx-auto mt-10 grid max-w-5xl gap-5 md:grid-cols-2">
+              <article className="rounded-2xl border border-line bg-surface p-7 text-left shadow-card">
+                <p className="text-sm font-semibold text-ink-muted">Direct route</p>
+                <h3 className="mt-3 text-2xl font-semibold text-ink">One large domain jump</h3>
+                <p className="mt-5 text-xl font-semibold text-accent">ImageNet → Raw cotton</p>
+                <p className="mt-4 text-base leading-7 text-ink-soft">
+                  The model moves straight from general objects to a small, fine-grained cotton task.
+                </p>
+              </article>
+
+              <article className="rounded-2xl border border-accent/30 bg-accent-soft p-7 text-left">
+                <p className="text-sm font-semibold text-accent">Our proposed route</p>
+                <h3 className="mt-3 text-2xl font-semibold text-ink">Adapt in smaller steps</h3>
+                <p className="mt-5 text-xl font-semibold text-accent">ImageNet → Leaves → Seeds → Raw cotton</p>
+                <p className="mt-4 text-base leading-7 text-ink-soft">
+                  The same backbone sees increasingly cotton-specific visual information before the final task.
+                </p>
+              </article>
+            </div>
           </div>
         </Container>
       </section>
 
-      <section className="bg-surface">
+      <section className="border-b border-line bg-surface">
         <Container className="py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-5xl text-center">
-            <p className="text-sm font-semibold text-accent">Training method</p>
+            <p className="text-sm font-semibold text-accent">Progressive adaptation</p>
             <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
-              One controlled pipeline for every stage.
+              Each stage moves the model closer to cotton.
             </h2>
 
-            <ol className="mx-auto mt-10 grid max-w-5xl gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
-              {trainingSteps.map(([title, detail], index) => (
+            <ol className="mx-auto mt-10 grid max-w-5xl gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
+              {progressivePath.map(([title, detail], index) => (
                 <li key={title} className="contents">
                   <div className="flex min-h-36 flex-col justify-center rounded-2xl border border-line bg-canvas px-5 py-5 text-center">
                     <span className="font-mono text-xs text-ink-muted">{String(index + 1).padStart(2, "0")}</span>
-                    <h3 className="mt-3 text-lg font-semibold text-ink">{title}</h3>
+                    <h3 className="mt-3 text-xl font-semibold text-ink">{title}</h3>
                     <p className="mt-2 text-sm leading-6 text-ink-soft">{detail}</p>
                   </div>
-                  {index < trainingSteps.length - 1 ? (
+                  {index < progressivePath.length - 1 ? (
                     <div className="grid place-items-center text-ink-muted" aria-hidden>
                       <ArrowDown className="h-5 w-5 lg:hidden" />
                       <ArrowRight className="hidden h-5 w-5 lg:block" />
@@ -102,64 +89,37 @@ export default function MethodPage() {
               ))}
             </ol>
 
-            <dl className="mx-auto mt-10 grid max-w-4xl gap-5 border-y border-line py-7 sm:grid-cols-2 lg:grid-cols-4">
-              <MethodStat label="Backbone" value="ConvNeXt-Tiny" />
-              <MethodStat label="Input" value="224 × 224 RGB" />
-              <MethodStat label="Optimizer" value="AdamW" />
-              <MethodStat label="Primary metric" value="Macro-F1" />
-            </dl>
-
-            <p className="mx-auto mt-7 max-w-3xl text-base leading-7 text-ink-soft">
-              For the final study, images from the same physical specimen will stay in the same split wherever provenance allows.
-            </p>
-
-            <div className="mt-10 flex justify-center">
-              <Link href="/results" className="inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
-                Review measured results <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
+              <article className="rounded-2xl border border-line bg-surface p-6 text-left">
+                <p className="text-sm font-semibold text-accent">Why leaves?</p>
+                <p className="mt-3 text-lg leading-7 text-ink">
+                  They introduce the backbone to cotton-specific visual patterns before the final fibre task.
+                </p>
+              </article>
+              <article className="rounded-2xl border border-line bg-surface p-6 text-left">
+                <p className="text-sm font-semibold text-accent">Why seeds?</p>
+                <p className="mt-3 text-lg leading-7 text-ink">
+                  They add another cotton domain with different shape and surface information before raw cotton.
+                </p>
+              </article>
             </div>
           </div>
         </Container>
       </section>
+
+      <section className="bg-canvas">
+        <Container className="py-16 text-center sm:py-20">
+          <div className="mx-auto max-w-4xl">
+            <p className="text-sm font-semibold text-accent">Research hypothesis</p>
+            <h2 className="font-display mx-auto mt-4 max-w-3xl text-4xl leading-[1.04] text-ink sm:text-5xl">
+              Progressive transfer is the idea we are testing — not a result we assume.
+            </h2>
+            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-ink-soft">
+              The final experiment compares this route against direct and partial transfer. If direct ImageNet transfer performs better, that is still a valid result.
+            </p>
+          </div>
+        </Container>
+      </section>
     </>
-  );
-}
-
-function DataCard({
-  label,
-  title,
-  value,
-  detail,
-  status,
-  pending = false,
-}: {
-  label: string;
-  title: string;
-  value: string;
-  detail: string;
-  status: string;
-  pending?: boolean;
-}) {
-  return (
-    <article className={pending ? "rounded-2xl border border-gold/30 bg-gold-soft p-6 text-left" : "rounded-2xl border border-line bg-surface p-6 text-left shadow-card"}>
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-sm font-semibold text-ink-muted">{label}</p>
-        <span className={pending ? "text-sm font-semibold text-gold-strong" : "text-sm font-semibold text-accent"}>
-          {status}
-        </span>
-      </div>
-      <h3 className="mt-5 text-xl font-semibold text-ink">{title}</h3>
-      <p className="metric-tabular mt-4 text-4xl font-semibold tracking-[-0.03em] text-ink">{value}</p>
-      <p className="mt-2 text-base text-ink-soft">{detail}</p>
-    </article>
-  );
-}
-
-function MethodStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-sm font-semibold text-ink-muted">{label}</dt>
-      <dd className="mt-2 text-xl font-semibold text-ink">{value}</dd>
-    </div>
   );
 }

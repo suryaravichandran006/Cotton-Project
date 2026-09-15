@@ -10,10 +10,11 @@ import { SITE } from "@/lib/config";
 const NAV = [
   { href: "/", label: "Overview" },
   { href: "/literature", label: "Literature" },
-  { href: "/progress", label: "Progress" },
-  { href: "/architecture", label: "Architecture" },
   { href: "/datasets", label: "Approach" },
+  { href: "/architecture", label: "Architecture" },
+  { href: "/implementation", label: "Implementation" },
   { href: "/results", label: "Results" },
+  { href: "/progress", label: "Progress" },
   { href: "/analyze", label: "Final Stage", wip: true },
 ] as const;
 

@@ -1,33 +1,37 @@
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, CheckCircle2, Database, Leaf, RefreshCw, Sprout, TriangleAlert } from "lucide-react";
+import { ArrowRight, CheckCircle2, Database, Leaf, RefreshCw, Sprout } from "lucide-react";
+
+import { Container } from "@/components/page-header";
 import { StageResultsVisuals } from "@/components/stage-results-visuals";
-import { Container, PageHeader } from "@/components/page-header";
+import { StatusBadge } from "@/components/presentation";
 import { datasetById, formatCount, formatPercent, stageResultById } from "@/lib/research";
 
 const COPY = {
   leaf: {
-    eyebrow: "Stage 01 · Complete",
+    stage: "Stage 01",
     title: "Cotton leaf adaptation",
-    description: "ImageNet → cotton leaves. This stage moves a generic ConvNeXt-Tiny backbone into a real cotton visual domain before any seed or fibre training.",
+    path: "ImageNet → Cotton leaves",
+    summary: "The first stage moves ConvNeXt-Tiny from general ImageNet features into a cotton-specific visual domain.",
+    why: "Leaves give the backbone its first exposure to cotton-specific shape, texture and disease patterns before seed and fibre training.",
     icon: Leaf,
-    why: "Cotton leaves expose the model to cotton-specific morphology, lesions, discoloration and fine surface texture. The temporary five-class disease / health head is useful only for this training stage.",
     init: "ImageNet-1K pretrained ConvNeXt-Tiny",
     head: "5-class leaf disease / health head",
-    transfer: "Best leaf checkpoint becomes the initialization for the seed stage.",
+    handoff: "Best leaf checkpoint initializes the seed stage.",
     nextHref: "/models/seed",
     nextLabel: "Continue to seed stage",
   },
   seed: {
-    eyebrow: "Stage 02 · Complete",
+    stage: "Stage 02",
     title: "Cotton seed adaptation",
-    description: "Cotton leaves → cotton seeds. The second stage starts from the trained leaf backbone and specializes it toward compact structures, cracks, boundaries and material texture.",
+    path: "Cotton leaves → Cotton seeds",
+    summary: "The second stage starts from the trained leaf backbone and adapts it to a different cotton domain.",
+    why: "Seeds add compact structures, cracks, boundaries and surface texture before the final raw-cotton task.",
     icon: Sprout,
-    why: "The seed labels are not cultivar labels. Their purpose is representation learning: forcing the backbone to model local cotton texture and small structural changes before final fibre training.",
     init: "Best leaf-stage ConvNeXt-Tiny checkpoint",
     head: "3-class broken / cracked / intact head",
-    transfer: "180 compatible tensors transferred from leaf → seed; two task-head tensors were skipped and replaced.",
+    handoff: "180 compatible tensors transferred; 2 task-head tensors replaced.",
     nextHref: "/analyze",
-    nextLabel: "Open final cotton workspace",
+    nextLabel: "Continue to final stage",
   },
 } as const;
 
@@ -39,92 +43,176 @@ export function StageModelStory({ stageId }: { stageId: keyof typeof COPY }) {
 
   return (
     <>
-      <PageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
-      <Container className="space-y-16 py-14 sm:py-16">
-        <section className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-          <article className="rounded-[1.75rem] bg-ink p-7 text-white sm:p-8">
-            <Icon className="h-6 w-6 text-white/70" />
-            <p className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-white/45">Why this stage?</p>
-            <p className="font-display mt-4 text-3xl leading-tight sm:text-4xl">{copy.why}</p>
-          </article>
-
-          <article className="rounded-[1.75rem] border border-line bg-surface p-7 sm:p-8">
-            <div className="flex items-center gap-2 text-accent"><Database className="h-4 w-4" /><span className="text-xs font-semibold uppercase tracking-[0.14em]">Dataset & split</span></div>
-            <h2 className="font-display mt-4 text-3xl text-ink">{dataset.name}</h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <SmallStat label="Training-ready" value={formatCount(result.training_ready_images)} />
-              <SmallStat label="Classes" value={String(dataset.classes)} />
-              <SmallStat label="Train / val / test" value={`${result.split.train} / ${result.split.val} / ${result.split.test}`} />
+      <section className="border-b border-line bg-surface">
+        <Container className="py-16 text-center sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex justify-center">
+              <StatusBadge>{copy.stage} · Complete</StatusBadge>
             </div>
-            <p className="mt-6 text-sm leading-7 text-ink-soft">{dataset.source_scope}</p>
-          </article>
-        </section>
-
-        <section>
-          <div className="mb-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Training setup</p>
-            <h2 className="font-display mt-3 text-4xl text-ink">What we actually trained.</h2>
+            <h1 className="font-display mx-auto mt-5 max-w-4xl text-5xl leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
+              {copy.title}
+            </h1>
+            <p className="mt-4 text-base font-semibold text-accent">{copy.path}</p>
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-ink-soft">
+              {copy.summary}
+            </p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Setup icon={BrainCircuit} label="Initialization" value={copy.init} />
-            <Setup icon={RefreshCw} label="Temporary task head" value={copy.head} />
-            <Setup icon={CheckCircle2} label="Checkpoint handoff" value={copy.transfer} />
-          </div>
-        </section>
+        </Container>
+      </section>
 
-        <section>
-          <div className="flex flex-wrap items-end justify-between gap-5">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Held-out results</p>
-              <h2 className="font-display mt-3 text-4xl text-ink">Stage {stageId === "leaf" ? "01" : "02"} performance.</h2>
+      <section className="border-b border-line bg-canvas">
+        <Container className="py-16 sm:py-20">
+          <div className="mx-auto max-w-5xl text-center">
+            <Icon className="mx-auto h-6 w-6 text-accent" aria-hidden />
+            <p className="mt-4 text-sm font-semibold text-accent">Why this stage?</p>
+            <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
+              {copy.why}
+            </h2>
+
+            <div className="mx-auto mt-10 grid max-w-5xl gap-5 md:grid-cols-3">
+              <StageCard
+                icon={Database}
+                label="Dataset"
+                title={dataset.name}
+                detail={formatCount(result.training_ready_images) + " images · " + String(dataset.classes) + " classes"}
+              />
+              <StageCard
+                icon={RefreshCw}
+                label="Temporary task"
+                title={copy.head}
+                detail="Used only to adapt the shared backbone at this stage."
+              />
+              <StageCard
+                icon={CheckCircle2}
+                label="Checkpoint output"
+                title={copy.handoff}
+                detail="The task head is not carried forward as the final classifier."
+              />
             </div>
-            <p className="text-sm text-ink-muted">Best validation checkpoint · epoch {result.best_epoch}</p>
           </div>
+        </Container>
+      </section>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <BigMetric label="Test Macro-F1" value={formatPercent(result.test.macro_f1)} primary />
-            <BigMetric label="Accuracy" value={formatPercent(result.test.accuracy)} />
-            <BigMetric label="Balanced accuracy" value={formatPercent(result.test.balanced_accuracy)} />
-            <BigMetric label="Correct" value={`${result.test.correct} / ${result.test.samples}`} />
-          </div>
+      <section className="border-b border-line bg-surface">
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="text-sm font-semibold text-accent">Held-out results</p>
+            <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
+              The stage learned its task successfully.
+            </h2>
 
-          <div className="mt-6"><StageResultsVisuals stageId={stageId} /></div>
-        </section>
+            <dl className="mx-auto mt-9 grid max-w-3xl gap-6 sm:grid-cols-2">
+              <ResultMetric value={formatPercent(result.test.macro_f1)} label="Test Macro-F1" />
+              <ResultMetric value={String(result.test.correct) + " / " + String(result.test.samples)} label="Correct predictions" />
+            </dl>
 
-        <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <article className="overflow-hidden rounded-2xl border border-line bg-surface">
-            <div className="border-b border-line px-6 py-4"><p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Per-class test performance</p></div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[650px] text-left text-sm">
-                <thead className="bg-canvas text-[10px] uppercase tracking-[0.12em] text-ink-muted"><tr><th className="px-6 py-3">Class</th><th className="px-4 py-3">Precision</th><th className="px-4 py-3">Recall</th><th className="px-4 py-3">F1</th><th className="px-4 py-3">Support</th></tr></thead>
-                <tbody className="divide-y divide-line">
-                  {result.per_class.map((row) => <tr key={row.name}><td className="px-6 py-3 font-semibold text-ink">{row.name}</td><td className="px-4 py-3">{formatPercent(row.precision)}</td><td className="px-4 py-3">{formatPercent(row.recall)}</td><td className="px-4 py-3">{formatPercent(row.f1)}</td><td className="px-4 py-3">{row.support}</td></tr>)}
-                </tbody>
-              </table>
+            <div className="mx-auto mt-10 max-w-4xl text-left">
+              <StageResultsVisuals stageId={stageId} variant="matrix" />
             </div>
-          </article>
 
-          <aside className="rounded-2xl border border-gold/20 bg-gold-soft p-6">
-            <TriangleAlert className="h-5 w-5 text-gold" />
-            <h3 className="mt-5 text-lg font-semibold text-ink">Evaluation limitation</h3>
-            <p className="mt-3 text-sm leading-7 text-ink-soft">{result.caveat}</p>
-          </aside>
-        </section>
+            <p className="mx-auto mt-7 max-w-3xl text-base leading-7 text-ink-soft">
+              Best validation checkpoint selected at epoch {result.best_epoch}. These are image-level held-out results for this temporary training task.
+            </p>
+          </div>
+        </Container>
+      </section>
 
-        <div className="flex justify-end"><Link href={copy.nextHref} className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-strong">{copy.nextLabel} <ArrowRight className="h-4 w-4" /></Link></div>
-      </Container>
+      <section className="bg-canvas">
+        <Container className="py-16 sm:py-20">
+          <div className="mx-auto max-w-5xl">
+            <details className="rounded-2xl border border-line bg-surface px-6 py-5">
+              <summary className="cursor-pointer text-center text-base font-semibold text-accent">
+                View technical evidence
+              </summary>
+
+              <div className="mt-7 border-t border-line pt-7">
+                <div className="grid gap-5 md:grid-cols-3">
+                  <TechnicalStat label="Initialization" value={copy.init} />
+                  <TechnicalStat label="Train / val / test" value={result.split.train + " / " + result.split.val + " / " + result.split.test} />
+                  <TechnicalStat label="Evaluation boundary" value={result.caveat} />
+                </div>
+
+                <div className="mt-7">
+                  <StageResultsVisuals stageId={stageId} />
+                </div>
+
+                <div className="mt-7 overflow-hidden rounded-2xl border border-line">
+                  <table className="w-full min-w-[650px] text-left text-sm">
+                    <thead className="bg-canvas text-xs text-ink-muted">
+                      <tr>
+                        <th className="px-6 py-3">Class</th>
+                        <th className="px-4 py-3">Precision</th>
+                        <th className="px-4 py-3">Recall</th>
+                        <th className="px-4 py-3">F1</th>
+                        <th className="px-4 py-3">Support</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {result.per_class.map((row) => (
+                        <tr key={row.name}>
+                          <td className="px-6 py-3 font-semibold text-ink">{row.name}</td>
+                          <td className="px-4 py-3">{formatPercent(row.precision)}</td>
+                          <td className="px-4 py-3">{formatPercent(row.recall)}</td>
+                          <td className="px-4 py-3">{formatPercent(row.f1)}</td>
+                          <td className="px-4 py-3">{row.support}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+
+            <div className="mt-10 flex justify-center">
+              <Link
+                href={copy.nextHref}
+                className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-strong"
+              >
+                {copy.nextLabel} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }
 
-function SmallStat({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-xl bg-canvas p-4"><p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ink-muted">{label}</p><p className="metric-tabular mt-2 text-xl font-semibold text-ink">{value}</p></div>;
+function StageCard({
+  icon: Icon,
+  label,
+  title,
+  detail,
+}: {
+  icon: typeof Database;
+  label: string;
+  title: string;
+  detail: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-line bg-surface p-6 text-left shadow-card">
+      <Icon className="h-5 w-5 text-accent" aria-hidden />
+      <p className="mt-5 text-sm font-semibold text-accent">{label}</p>
+      <h3 className="mt-2 text-xl font-semibold leading-7 text-ink">{title}</h3>
+      <p className="mt-3 text-base leading-7 text-ink-soft">{detail}</p>
+    </article>
+  );
 }
 
-function Setup({ icon: Icon, label, value }: { icon: typeof BrainCircuit; label: string; value: string }) {
-  return <article className="rounded-2xl border border-line bg-surface p-5"><Icon className="h-5 w-5 text-accent" /><p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{label}</p><p className="mt-2 text-sm font-semibold leading-6 text-ink">{value}</p></article>;
+function ResultMetric({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="border-t border-line-strong pt-5 text-center">
+      <dt className="text-sm font-semibold text-ink-muted">{label}</dt>
+      <dd className="metric-tabular mt-2 text-5xl font-semibold tracking-[-0.04em] text-ink sm:text-6xl">{value}</dd>
+    </div>
+  );
 }
 
-function BigMetric({ label, value, primary = false }: { label: string; value: string; primary?: boolean }) {
-  return <div className={primary ? "rounded-2xl bg-accent p-6 text-white" : "rounded-2xl border border-line bg-surface p-6"}><p className={primary ? "text-xs font-semibold uppercase tracking-[0.12em] text-white/65" : "text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted"}>{label}</p><p className={`metric-tabular mt-3 text-4xl font-semibold ${primary ? "text-white" : "text-ink"}`}>{value}</p></div>;
+function TechnicalStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-canvas p-5">
+      <p className="text-sm font-semibold text-ink-muted">{label}</p>
+      <p className="mt-2 text-base font-semibold leading-7 text-ink">{value}</p>
+    </div>
+  );
 }

@@ -2,7 +2,7 @@
   "project": {
     "name": "Cotton Grade",
     "title": "Progressive Domain-Adaptive Transfer Learning for Fine-Grained Cotton Cultivar Identification",
-    "research_question": "Can a progressively trained vision model help small cotton and textile retailers identify raw cotton cultivar from a single RGB photograph more reliably than direct ImageNet transfer?",
+    "research_question": "Does progressive cotton-domain adaptation improve final cultivar recognition compared with direct ImageNet transfer?",
     "hypothesis": "A backbone progressively adapted from generic ImageNet features to cotton-specific leaf and seed representations may learn more useful texture and morphology features before final fine-tuning on limited raw cotton fibre data.",
     "primary_architecture": "convnext_tiny",
     "deployment_note": "Leaf and seed classifiers are completed training stages only. Production inference will load only the final raw-cotton model after the final stage is trained."

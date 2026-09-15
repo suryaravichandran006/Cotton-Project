@@ -18,14 +18,14 @@ const matrices = {
   },
 } as const;
 
-export function StageResultsVisuals({ stageId }: { stageId: "leaf" | "seed" }) {
+export function StageResultsVisuals({ stageId, variant = "full" }: { stageId: "leaf" | "seed"; variant?: "full" | "matrix" }) {
   const history = histories[stageId].map((macroF1, index) => ({ epoch: index + 1, macroF1: macroF1 * 100 }));
   const matrix = matrices[stageId];
   const max = Math.max(...matrix.values.flat());
 
   return (
-    <div className="grid min-w-0 gap-5 lg:grid-cols-2">
-      <article className="min-w-0 rounded-2xl border border-line bg-surface p-5 shadow-card">
+    <div className={variant === "full" ? "grid min-w-0 gap-5 lg:grid-cols-2" : "min-w-0"}>
+      {variant === "full" ? <article className="min-w-0 rounded-2xl border border-line bg-surface p-5 shadow-card">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Validation history</p>
         <h3 className="mt-2 text-xl font-semibold text-ink">Macro-F1 across epochs</h3>
         <div className="mt-6 h-72" role="img" aria-label="Validation macro-F1 training curve">
@@ -47,7 +47,7 @@ export function StageResultsVisuals({ stageId }: { stageId: "leaf" | "seed" }) {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </article>
+      </article> : null}
 
       <article className="min-w-0 rounded-2xl border border-line bg-surface p-5 shadow-card">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Held-out test set</p>
@@ -56,10 +56,10 @@ export function StageResultsVisuals({ stageId }: { stageId: "leaf" | "seed" }) {
           <div className="min-w-[300px]">
             <div className="grid gap-1" style={{ gridTemplateColumns: `80px repeat(${matrix.labels.length}, minmax(36px, 1fr))` }}>
               <div />
-              {matrix.labels.map((label) => <div key={label} className="px-0.5 pb-2 text-center text-[9px] font-semibold text-ink-muted sm:text-[10px]">{label}</div>)}
+              {matrix.labels.map((label) => <div key={label} className="px-0.5 pb-2 text-center text-[10px] font-semibold text-ink-muted sm:text-xs">{label}</div>)}
               {matrix.values.map((row, rowIndex) => (
                 <div key={matrix.labels[rowIndex]} className="contents">
-                  <div className="flex items-center pr-2 text-[10px] font-semibold text-ink-soft sm:text-xs">{matrix.labels[rowIndex]}</div>
+                  <div className="flex items-center pr-2 text-xs font-semibold text-ink-soft">{matrix.labels[rowIndex]}</div>
                   {row.map((value, colIndex) => {
                     const strength = max ? value / max : 0;
                     return (
@@ -76,7 +76,7 @@ export function StageResultsVisuals({ stageId }: { stageId: "leaf" | "seed" }) {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-center text-[11px] text-ink-muted">Rows = actual class · columns = predicted class</p>
+            <p className="mt-4 text-center text-xs text-ink-muted">Rows = actual class · columns = predicted class</p>
           </div>
         </div>
       </article>

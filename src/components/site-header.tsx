@@ -9,16 +9,17 @@ import { SITE } from "@/lib/config";
 
 const NAV = [
   { href: "/", label: "Overview" },
+  { href: "/literature", label: "Literature" },
   { href: "/progress", label: "Progress" },
   { href: "/architecture", label: "Architecture" },
-  { href: "/datasets", label: "Data & Method" },
+  { href: "/datasets", label: "Method" },
   { href: "/results", label: "Results" },
   { href: "/analyze", label: "Final Stage", wip: true },
 ] as const;
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-3", className)}>
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
       <span className="grid h-9 w-9 place-items-center rounded-full border border-accent/20 bg-accent-soft">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden className="text-accent">
           <circle cx="9" cy="10" r="4.1" fill="currentColor" opacity="0.16" />
@@ -53,7 +54,7 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-medium transition xl:px-3.5 xl:text-sm",
+                  "inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-[13px] font-medium transition xl:gap-1.5 xl:px-3 xl:text-sm",
                   active ? "bg-accent text-white" : "text-ink-soft hover:bg-surface-muted hover:text-ink",
                 )}
               >

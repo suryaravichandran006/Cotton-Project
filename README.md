@@ -14,7 +14,7 @@ The leaf and seed classifiers are **training stages only**. At deployment, Cotto
 
 ## Research question
 
-> Can a progressively trained vision model help small cotton and textile retailers identify raw cotton cultivar from a single RGB photograph more reliably than direct ImageNet transfer?
+> Does progressive cotton-domain adaptation improve final cultivar recognition compared with direct ImageNet transfer?
 
 Cotton Grade does not assume that the answer is yes. It implements four controlled routes:
 
@@ -39,16 +39,22 @@ See [`docs/PROGRESSIVE_TRANSFER.md`](docs/PROGRESSIVE_TRANSFER.md) for the compl
 
 ## Website structure
 
-The site is intentionally a normal research/product website rather than a slide deck:
+The primary site is a concise, projector-first research briefing:
 
-- `/` — project introduction
-- `/research` — problem, research question, hypothesis and controlled experiment design
-- `/datasets` — leaf, seed and final datasets plus leakage prevention
-- `/architecture` — transfer-learning and deployment architecture
+- `/` — practical problem, exact research question and current evidence boundary
+- `/literature` — six primary studies, three themes and the research gap
+- `/progress` — completed stages, working implementation and technical refinements
+- `/architecture` — complete transfer-learning and deployment architecture
+- `/datasets` — stage data and the controlled processing method
+- `/results` — leaf and seed evidence, confusion matrices and verified handoff
+- `/analyze` — pending final experiment, four routes and fixed decision rule
+
+Deeper supporting routes remain available outside the main presentation path:
+
+- `/research` — detailed problem, hypothesis and controlled experiment design
 - `/models/leaf` — intermediate model 1
 - `/models/seed` — intermediate model 2
 - `/experiments` — real experiment comparison; no placeholder metrics
-- `/analyze` — final model lineage and live inference UI
 - `/history`, `/statistics`, `/docs`, `/about` — supporting product/research pages
 
 ## System capabilities

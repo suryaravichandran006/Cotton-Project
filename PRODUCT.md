@@ -20,7 +20,7 @@ The research tests whether one ConvNeXt-Tiny backbone benefits from progressive 
 
 ## Operating Context
 
-The website is presented in the order Overview, Progress, Architecture, Data & Method, Results and Final Stage. Previous-review feedback, approved milestones, report chapter status and individual contributions are presented orally and must not be added to the website.
+The primary presentation path is Overview, Literature, Progress, Architecture, Method, Results and Final Stage. It is designed for a live projector review: one question per section, large legible type, concise interpretation and optional deep evidence. Previous-review feedback, approved milestones, report chapter status and individual contributions are presented orally and must not be added to the website.
 
 ## Capabilities and Constraints
 
@@ -29,6 +29,8 @@ The website is presented in the order Overview, Progress, Architecture, Data & M
 - Real report artifacts under `Ran reports/` are the source of truth for measured results.
 - Do not fabricate final-stage results or imply that intermediate accuracy proves the final research hypothesis.
 - Use graphs and diagrams only where they improve explanation, and keep detailed parameters or secondary metrics out of the primary reading path.
+- Keep the Architecture page as the visual and structural benchmark; shared navigation may change, but its diagram must remain intact.
+- Literature claims must link to real primary papers and describe the gap conservatively as limited evidence, not universal absence.
 
 ## Brand Commitments
 
@@ -48,5 +50,6 @@ Retain the Cotton Grade name and the existing restrained research-oriented visua
 - Lead with the research story the panel must understand.
 - Show measured evidence next to its interpretation and limitation.
 - Keep one clear level of detail in the main narrative and place deeper evidence behind optional links.
+- Make every primary page readable from a projector before optimizing for dense desktop browsing.
 - Separate completed work from planned work unambiguously.
 - Preserve scientific honesty when evidence is incomplete or dataset provenance limits evaluation strength.

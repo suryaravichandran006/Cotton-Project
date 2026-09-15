@@ -99,7 +99,34 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section className="paper-field border-b border-line bg-canvas">
+      <section className="border-b border-line bg-canvas">
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <div className="text-center lg:text-left">
+                <p className="text-sm font-semibold text-accent">Problem</p>
+                <h2 className="font-display mt-4 text-4xl leading-[1.04] text-ink sm:text-5xl">
+                  Raw-cotton data is limited.
+                </h2>
+                <p className="mt-5 text-lg leading-8 text-ink-soft">
+                  A small final dataset gives direct fine-tuning less cotton-specific evidence and increases overfitting risk.
+                </p>
+              </div>
+
+              <div>
+                <p className="text-center text-sm font-semibold text-accent lg:text-left">Objectives</p>
+                <div className="mt-5 grid gap-4">
+                  <Objective number="01" text="Build an ImageNet → Leaf → Seed → Raw Cotton learning path." />
+                  <Objective number="02" text="Verify that learned backbone weights transfer correctly between stages." />
+                  <Objective number="03" text="Compare progressive transfer fairly against direct and partial transfer." />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="paper-field border-b border-line bg-surface">
         <Container className="py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-5xl text-center">
             <p className="text-sm font-semibold text-accent">Research question</p>
@@ -109,33 +136,16 @@ export default function HomePage() {
           </div>
         </Container>
       </section>
-
-      <section className="border-b border-line bg-surface">
-        <Container className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-5xl text-center">
-            <p className="text-sm font-semibold text-accent">Evidence boundary</p>
-            <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
-              What is proven — and what is not.
-            </h2>
-
-            <div className="mt-10 grid gap-5 text-left md:grid-cols-2">
-              <article className="rounded-2xl border border-accent/25 bg-accent-soft p-6 sm:p-7">
-                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-accent">Proven</p>
-                <p className="mt-3 text-xl font-semibold leading-8 text-ink">
-                  Leaf and seed stages train successfully, and compatible backbone weights transfer between them.
-                </p>
-              </article>
-
-              <article className="rounded-2xl border border-gold/25 bg-gold-soft p-6 sm:p-7">
-                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-gold-strong">Not yet proven</p>
-                <p className="mt-3 text-xl font-semibold leading-8 text-ink">
-                  Whether progressive transfer improves final raw-cotton grade recognition.
-                </p>
-              </article>
-            </div>
-          </div>
-        </Container>
-      </section>
     </>
+  );
+}
+
+
+function Objective({ number, text }: { number: string; text: string }) {
+  return (
+    <div className="grid grid-cols-[40px_1fr] items-start gap-4 rounded-2xl border border-line bg-surface px-5 py-5">
+      <span className="font-mono text-xs text-ink-muted">{number}</span>
+      <p className="text-lg font-semibold leading-7 text-ink">{text}</p>
+    </div>
   );
 }

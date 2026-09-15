@@ -28,10 +28,7 @@ export function Logo({ className }: { className?: string }) {
           <path d="M12 18.4c-.15-4.55-.08-8.1 0-11.4M12 15.8c-2.15-1.85-3.55-3.9-4.2-6.15M12 15.8c2.15-1.85 3.55-3.9 4.2-6.15" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" fill="none" />
         </svg>
       </span>
-      <span>
-        <span className="block text-base font-semibold leading-none tracking-[-0.02em] text-ink">{SITE.name}</span>
-        <span className="mt-1 hidden text-[10px] font-medium tracking-wide text-ink-muted sm:block">Progressive cotton vision research</span>
-      </span>
+      <span className="block text-base font-semibold leading-none tracking-[-0.02em] text-ink">{SITE.name}</span>
     </span>
   );
 }

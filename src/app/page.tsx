@@ -1,8 +1,8 @@
 /*
-THESIS: Cotton Grade is a focused research briefing for accessible, photo-based cotton cultivar recognition.
+THESIS: Cotton Grade is a focused research briefing for accessible, photo-based cotton grade recognition.
 OWN-WORLD: Use the Architecture page's paper-white canvas, outlined process blocks and restrained cotton palette.
 STORY: Begin with the practical goal, show the progressive learning path, state the exact research question, then separate proven evidence from the unanswered final hypothesis.
-FIRST VIEWPORT: A centered project statement, concise use-case copy, navigation actions and a clean visual path from one photograph to the intended cultivar output.
+FIRST VIEWPORT: A centered project statement, concise use-case copy, navigation actions and a clean visual path from one photograph to the intended grade output.
 FORM: A projector-first academic opener rather than a product dashboard or section directory.
 */
 
@@ -16,7 +16,7 @@ const stages = [
   { number: "01", title: "ImageNet", detail: "pretrained visual features", tone: "border-danger/20 bg-danger-soft", text: "text-danger" },
   { number: "02", title: "Cotton leaves", detail: "1,124 cleaned images", tone: "border-info/25 bg-info-soft", text: "text-info", status: "Complete" },
   { number: "03", title: "Cotton seeds", detail: "450 images", tone: "border-accent/25 bg-accent-soft", text: "text-accent-strong", status: "Complete" },
-  { number: "04", title: "Raw cotton", detail: "final cultivar task", tone: "border-gold/25 bg-gold-soft", text: "text-gold-strong", status: "Pending" },
+  { number: "04", title: "Raw cotton", detail: "final grade task", tone: "border-gold/25 bg-gold-soft", text: "text-gold-strong", status: "Pending" },
 ] as const;
 
 export default function HomePage() {
@@ -27,7 +27,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Review 3</p>
             <h1 className="font-display mx-auto mt-5 max-w-4xl text-5xl leading-[0.96] text-ink sm:text-6xl lg:text-[4.75rem]">
-              Cotton cultivar identification from a single photograph.
+              Cotton grade identification from a single photograph.
             </h1>
             <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-ink-soft">
               Cotton Grade explores an accessible vision-based approach for small cotton and textile retailers, using an ordinary RGB image instead of specialist equipment.
@@ -57,7 +57,7 @@ export default function HomePage() {
 
                 <div className="rounded-2xl border border-accent/25 bg-accent-soft px-6 py-6 text-center">
                   <p className="text-xs font-semibold uppercase tracking-[0.13em] text-accent">Intended output</p>
-                  <p className="mt-2 text-xl font-semibold text-ink">Cultivar + confidence</p>
+                  <p className="mt-2 text-xl font-semibold text-ink">Grade + confidence</p>
                   <p className="mt-1 text-sm text-ink-soft">available after the final study</p>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-5xl text-center">
             <p className="text-sm font-semibold text-accent">Research question</p>
             <h2 className="font-display mx-auto mt-4 max-w-5xl text-4xl leading-[1.03] text-ink sm:text-5xl lg:text-6xl">
-              Does progressive cotton-domain adaptation improve final cultivar recognition compared with direct ImageNet transfer?
+              Does progressive cotton-domain adaptation improve final grade recognition compared with direct ImageNet transfer?
             </h2>
           </div>
         </Container>
@@ -129,7 +129,7 @@ export default function HomePage() {
               <article className="rounded-2xl border border-gold/25 bg-gold-soft p-6 sm:p-7">
                 <p className="text-sm font-semibold uppercase tracking-[0.12em] text-gold-strong">Not yet proven</p>
                 <p className="mt-3 text-xl font-semibold leading-8 text-ink">
-                  Whether progressive transfer improves final raw-cotton cultivar recognition.
+                  Whether progressive transfer improves final raw-cotton grade recognition.
                 </p>
               </article>
             </div>

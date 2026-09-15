@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";\nimport { ArrowDown, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowDown, ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/page-header";
 import { StatusBadge } from "@/components/presentation";

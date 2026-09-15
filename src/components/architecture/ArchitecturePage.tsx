@@ -12,7 +12,7 @@ export function ArchitecturePage() {
           <div className="mx-auto max-w-5xl">
             <p className="text-sm font-semibold text-accent">Model Architecture</p>
             <h1 className="font-display mx-auto mt-4 max-w-5xl text-5xl leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
-              One visual backbone, progressively adapted to cotton.
+              How the model learns across each stage.
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-ink-soft">
               ImageNet initializes ConvNeXt-Tiny. Cotton leaf and seed tasks progressively adapt its learned features before the final controlled cultivar experiment.

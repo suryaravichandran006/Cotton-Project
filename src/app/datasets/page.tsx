@@ -29,8 +29,8 @@ export default function MethodPage() {
             <h1 className="font-display mx-auto mt-4 max-w-4xl text-5xl leading-[0.98] text-ink sm:text-6xl lg:text-7xl">
               How we prepare and train the model.
             </h1>
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-ink-soft">
-              The method is kept consistent across stages so the final comparison is fair.
+            <p className="mx-auto mt-6 max-w-4xl text-lg leading-8 text-ink-soft">
+              We audit and split each dataset, resize images to 224 × 224, augment only the training set, then fine-tune the same ConvNeXt-Tiny backbone and evaluate with Macro-F1.
             </p>
           </div>
         </Container>

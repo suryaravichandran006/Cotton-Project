@@ -49,21 +49,21 @@ export default function MethodPage() {
                 label="Stage 1"
                 title="Cotton leaves"
                 value={formatCount(leaf.used_images ?? leaf.images)}
-                detail={\`\${leaf.classes} classes\`}
+                detail={String(leaf.classes) + " classes"}
                 status="Complete"
               />
               <DataCard
                 label="Stage 2"
                 title="Cotton seeds"
                 value={formatCount(seed.used_images ?? seed.images)}
-                detail={\`\${seed.classes} classes\`}
+                detail={String(seed.classes) + " classes"}
                 status="Complete"
               />
               <DataCard
                 label="Final stage"
                 title="Raw cotton fibre"
-                value={\`~\${formatCount(finalDataset.images)}\`}
-                detail={\`\${finalDataset.classes} cultivars\`}
+                value={"~" + formatCount(finalDataset.images)}
+                detail={String(finalDataset.classes) + " cultivars"}
                 status="Pending"
                 pending
               />

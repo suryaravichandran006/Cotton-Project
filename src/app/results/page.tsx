@@ -82,8 +82,8 @@ export default function ResultsPage() {
               <InterpretationCard label="Not proven yet" text="Progressive transfer is better for final raw-cotton grading." pending />
             </div>
 
-            <Link href="/analyze" className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
-              Continue to the final experiment <ArrowRight className="h-4 w-4" />
+            <Link href="/progress" className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
+              Review project progress <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Container>

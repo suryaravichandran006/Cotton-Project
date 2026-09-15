@@ -34,8 +34,8 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/progress" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-strong">
-                See current progress <ArrowRight className="h-4 w-4" />
+              <Link href="/datasets" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-strong">
+                See approach <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="/architecture" className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-surface px-5 py-3 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">
                 View architecture

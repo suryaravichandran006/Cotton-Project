@@ -1,38 +1,39 @@
 /*
 THESIS: Cotton Grade is a focused research briefing for accessible, photo-based cotton cultivar recognition.
 OWN-WORLD: Use the Architecture page's paper-white canvas, outlined process blocks and restrained cotton palette.
-STORY: Begin with the practical use case, state the exact research question, then show the evidence boundary.
-FIRST VIEWPORT: One ordinary photograph, one intended answer, and the progressive training lineage between them.
+STORY: Begin with the practical goal, show the progressive learning path, state the exact research question, then separate proven evidence from the unanswered final hypothesis.
+FIRST VIEWPORT: A centered project statement, concise use-case copy, navigation actions and a clean visual path from one photograph to the intended cultivar output.
 FORM: A projector-first academic opener rather than a product dashboard or section directory.
 */
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/page-header";
-import { FlowSequence, PresentationMetric, ResearchBoundary, StatusBadge } from "@/components/presentation";
+import { StatusBadge } from "@/components/presentation";
 
-const lineage = [
-  { title: "ImageNet", detail: "general features", tone: "rose" as const },
-  { title: "Cotton leaves", detail: "1,124 images", tone: "blue" as const, state: "complete" as const },
-  { title: "Cotton seeds", detail: "450 images", tone: "green" as const, state: "complete" as const },
-  { title: "Raw cotton", detail: "final cultivar task", tone: "gold" as const, state: "pending" as const },
-];
+const stages = [
+  { number: "01", title: "ImageNet", detail: "pretrained visual features", tone: "border-danger/20 bg-danger-soft", text: "text-danger" },
+  { number: "02", title: "Cotton leaves", detail: "1,124 cleaned images", tone: "border-info/25 bg-info-soft", text: "text-info", status: "Complete" },
+  { number: "03", title: "Cotton seeds", detail: "450 images", tone: "border-accent/25 bg-accent-soft", text: "text-accent-strong", status: "Complete" },
+  { number: "04", title: "Raw cotton", detail: "final cultivar task", tone: "border-gold/25 bg-gold-soft", text: "text-gold-strong", status: "Pending" },
+] as const;
 
 export default function HomePage() {
   return (
     <>
       <section className="border-b border-line bg-surface">
-        <Container className="grid gap-12 py-14 sm:py-18 lg:min-h-[calc(100vh-72px)] lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:py-16">
-          <div>
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Review 3</p>
-            <h1 className="font-display mt-5 max-w-3xl text-5xl leading-[0.95] text-ink sm:text-6xl lg:text-[4.75rem]">
-              One cotton photo. A useful cultivar answer.
+            <h1 className="font-display mx-auto mt-5 max-w-4xl text-5xl leading-[0.96] text-ink sm:text-6xl lg:text-[4.75rem]">
+              Cotton cultivar identification from a single photograph.
             </h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-ink-soft">
-              Cotton Grade is designed for small cotton and textile retailers who need an accessible way to identify the raw cotton they handle without specialist equipment.
+            <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-ink-soft">
+              Cotton Grade explores an accessible vision-based approach for small cotton and textile retailers, using an ordinary RGB image instead of specialist equipment.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link href="/progress" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-strong">
                 See current progress <ArrowRight className="h-4 w-4" />
               </Link>
@@ -40,55 +41,99 @@ export default function HomePage() {
                 View architecture
               </Link>
             </div>
-          </div>
 
-          <div className="architecture-paper rounded-2xl border border-line-strong bg-canvas p-5 shadow-lift sm:p-7" aria-label="Cotton Grade practical path">
-            <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-              <div className="rounded-2xl border border-danger/20 bg-danger-soft px-5 py-5 text-center">
-                <p className="text-lg font-semibold text-ink">One RGB photograph</p>
-                <p className="mt-1 text-sm text-ink-soft">ordinary phone or camera</p>
+            <div className="architecture-paper mx-auto mt-12 rounded-3xl border border-line-strong bg-canvas p-6 text-left shadow-lift sm:p-8 lg:p-9" aria-label="Cotton Grade learning path">
+              <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+                <div className="rounded-2xl border border-line-strong bg-surface px-6 py-6 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.13em] text-ink-muted">Input</p>
+                  <p className="mt-2 text-xl font-semibold text-ink">One RGB photograph</p>
+                  <p className="mt-1 text-sm text-ink-soft">ordinary phone or camera</p>
+                </div>
+
+                <div className="grid place-items-center text-ink-muted" aria-hidden>
+                  <ArrowDown className="h-5 w-5 md:hidden" />
+                  <ArrowRight className="hidden h-5 w-5 md:block" />
+                </div>
+
+                <div className="rounded-2xl border border-accent/25 bg-accent-soft px-6 py-6 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.13em] text-accent">Intended output</p>
+                  <p className="mt-2 text-xl font-semibold text-ink">Cultivar + confidence</p>
+                  <p className="mt-1 text-sm text-ink-soft">available after the final study</p>
+                </div>
               </div>
-              <ArrowRight className="mx-auto hidden h-5 w-5 text-ink-muted sm:block" aria-hidden />
-              <ArrowRight className="mx-auto h-5 w-5 rotate-90 text-ink-muted sm:hidden" aria-hidden />
-              <div className="rounded-2xl border border-accent/25 bg-accent-soft px-5 py-5 text-center">
-                <p className="text-lg font-semibold text-ink">Cultivar + confidence</p>
-                <p className="mt-1 text-sm text-ink-soft">intended final output</p>
+
+              <div className="my-8 border-t border-line" />
+
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="text-lg font-semibold text-ink">Progressive learning path</p>
+                  <p className="mt-1 text-sm leading-6 text-ink-soft">The same ConvNeXt-Tiny backbone becomes progressively more cotton-specific.</p>
+                </div>
+                <StatusBadge state="pending">Final experiment pending</StatusBadge>
               </div>
+
+              <ol className="mt-6 grid gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
+                {stages.map((stage, index) => (
+                  <li key={stage.title} className="contents">
+                    <div className={`flex min-h-36 flex-col rounded-2xl border px-5 py-5 ${stage.tone}`}>
+                      <span className="font-mono text-xs text-ink-muted">{stage.number}</span>
+                      <p className={`mt-4 text-xl font-semibold ${stage.text}`}>{stage.title}</p>
+                      <p className="mt-2 text-sm leading-6 text-ink-soft">{stage.detail}</p>
+                      {stage.status ? (
+                        <span className="mt-auto pt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{stage.status}</span>
+                      ) : (
+                        <span className="mt-auto pt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Initialization</span>
+                      )}
+                    </div>
+                    {index < stages.length - 1 ? (
+                      <div className="grid place-items-center text-ink-muted" aria-hidden>
+                        <ArrowDown className="h-5 w-5 lg:hidden" />
+                        <ArrowRight className="hidden h-5 w-5 lg:block" />
+                      </div>
+                    ) : null}
+                  </li>
+                ))}
+              </ol>
             </div>
-            <div className="my-6 border-t border-line" />
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-ink">How the model learns</p>
-                <p className="mt-1 text-xs leading-5 text-ink-muted">Features become progressively more cotton-specific.</p>
-              </div>
-              <StatusBadge state="pending">Final test pending</StatusBadge>
-            </div>
-            <FlowSequence steps={lineage} className="mt-5" />
           </div>
         </Container>
       </section>
 
       <section className="paper-field border-b border-line bg-canvas">
-        <Container className="grid gap-10 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-          <div>
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl text-center">
             <p className="text-sm font-semibold text-accent">Research question</p>
-            <h2 className="font-display mt-4 max-w-4xl text-4xl leading-[1.03] text-ink sm:text-5xl lg:text-6xl">
+            <h2 className="font-display mx-auto mt-4 max-w-5xl text-4xl leading-[1.03] text-ink sm:text-5xl lg:text-6xl">
               Does progressive cotton-domain adaptation improve final cultivar recognition compared with direct ImageNet transfer?
             </h2>
           </div>
-          <dl className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            <PresentationMetric value="2" label="Intermediate stages complete" />
-            <PresentationMetric value="180" label="Compatible tensors" detail="leaf checkpoint to seed" />
-            <PresentationMetric value="1" label="Final experiment pending" />
-          </dl>
         </Container>
       </section>
 
-      <section className="bg-surface">
-        <Container className="py-14 sm:py-16">
-          <ResearchBoundary title="What is proven—and what is not">
-            Leaf and seed training confirm that the pipeline learns, evaluates and transfers compatible backbone weights. Only the final four-route experiment can answer whether progressive transfer improves raw-cotton cultivar recognition.
-          </ResearchBoundary>
+      <section className="border-b border-line bg-surface">
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="text-sm font-semibold text-accent">Evidence boundary</p>
+            <h2 className="font-display mx-auto mt-4 max-w-4xl text-4xl leading-[1.04] text-ink sm:text-5xl">
+              What is proven — and what is not.
+            </h2>
+
+            <div className="mt-10 grid gap-5 text-left md:grid-cols-2">
+              <article className="rounded-2xl border border-accent/25 bg-accent-soft p-6 sm:p-7">
+                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-accent">Proven</p>
+                <p className="mt-3 text-xl font-semibold leading-8 text-ink">
+                  Leaf and seed stages train successfully, and compatible backbone weights transfer between them.
+                </p>
+              </article>
+
+              <article className="rounded-2xl border border-gold/25 bg-gold-soft p-6 sm:p-7">
+                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-gold-strong">Not yet proven</p>
+                <p className="mt-3 text-xl font-semibold leading-8 text-ink">
+                  Whether progressive transfer improves final raw-cotton cultivar recognition.
+                </p>
+              </article>
+            </div>
+          </div>
         </Container>
       </section>
     </>

@@ -17,7 +17,7 @@ from sklearn.linear_model import Ridge
 
 from ml.quality.data import DEFAULT_LABELS, build_manifest, fingerprint, read_labels, targets_for
 from ml.quality.matching import evaluate_known_lot_matching
-from ml.quality.model import FEATURE_CHANNELS, IMAGE_SIZE, TOKEN_GRID, QualityHead, image_tokens, make_encoder
+from ml.quality.model import IMAGE_SIZE, TOKEN_GRID, QualityHead, image_tokens, make_encoder
 from ml.quality.schema import CATEGORY_KEYS, NUMERIC_KEYS, PROPERTY_VERSION
 from ml.utils.paths import REPO_ROOT
 
@@ -165,14 +165,16 @@ def train(args) -> dict:
     if not backbone.is_file():
         raise FileNotFoundError("Missing pretrained encoder. Run python -m ml.quality.download_backbone first.")
     shutil.copyfile(backbone, run / "backbone.pt")
-    encoder = make_encoder(backbone)
+    encoder_name = getattr(args, "encoder", "torchvision_mobilenet_v3_small_imagenet1k_v1")
+    device = getattr(args, "device", "cpu")
+    encoder = make_encoder(backbone, device=device, encoder_name=encoder_name)
     features = []
     for offset in range(0, len(records), args.batch_size):
         images = []
         for record in records[offset : offset + args.batch_size]:
             with Image.open(record["image_path"]) as im:
                 images.append(im.copy())
-        features.append(image_tokens(encoder, images))
+        features.append(image_tokens(encoder, images, device=device))
         print(f"Encoded {min(offset + args.batch_size, len(records))}/{len(records)} loose-fibre photos", flush=True)
     x = np.concatenate(features).astype(np.float32)
     np.savez_compressed(run / "features.npz", tokens=x)
@@ -279,6 +281,7 @@ def train(args) -> dict:
             "purpose": "All-lot pilot fitting after model selection; training fit is not reported as test accuracy.",
         },
         "limitations": labels["limitations"],
+        "transfer_learning": getattr(args, "transfer_lineage", None),
     }
     write_json(run / "evaluation.json", report)
     files = ["backbone.pt", "parameters.npz", "references.npz", "labels.json", "evaluation.json"]
@@ -289,10 +292,11 @@ def train(args) -> dict:
         "property_version": PROPERTY_VERSION,
         "model_version": timestamp,
         "model": winner,
-        "encoder": "torchvision_mobilenet_v3_small_imagenet1k_v1",
+        "encoder": encoder_name,
+        "transfer_learning": getattr(args, "transfer_lineage", None),
         "image_size": IMAGE_SIZE,
         "token_grid": TOKEN_GRID,
-        "feature_channels": FEATURE_CHANNELS,
+        "feature_channels": x.shape[2],
         "numeric_keys": NUMERIC_KEYS,
         "category_keys": CATEGORY_KEYS,
         "category_values": category_values,
@@ -321,8 +325,12 @@ def main() -> None:
     parser.add_argument("--images", default=str(REPO_ROOT / "Lab Reports"))
     parser.add_argument("--labels", default=str(DEFAULT_LABELS))
     parser.add_argument("--backbone", default=str(REPO_ROOT / "models/quality/backbone.pt"))
+    parser.add_argument(
+        "--encoder", choices=["torchvision_mobilenet_v3_small_imagenet1k_v1", "timm_convnext_tiny"], default="torchvision_mobilenet_v3_small_imagenet1k_v1"
+    )
     parser.add_argument("--output", default=str(REPO_ROOT / "models/quality"))
     parser.add_argument("--epochs", type=int, default=60)
+    parser.add_argument("--device", choices=["cpu", "mps", "cuda"], default="cpu")
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--allow-provisional", action="store_true")

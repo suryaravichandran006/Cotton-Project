@@ -31,7 +31,7 @@ test("analyzes inline with a T label, recorded lab CSV and measured evaluation",
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
     if (model.matching.installed_name) {
       await expect(page.getByText(`Installed matcher: ${model.matching.installed_name}`, { exact: true })).toBeVisible();
-      await expect(page.getByText(/Target: 85.0%/)).toContainText(model.matching.target_met ? "met in this exploratory" : "not yet met");
+      await expect(page.getByText(/Target: 85.0%/)).toHaveCount(0);
     }
   }
   const folder = path.join(process.cwd(), "Lab Reports", "40's T5");

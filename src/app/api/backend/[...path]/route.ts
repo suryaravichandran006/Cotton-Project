@@ -8,6 +8,7 @@
  * Mobile clients call the backend origin directly.
  */
 import type { NextRequest } from "next/server";
+import { isAnalysisOnly, isAnalysisRequestAllowed } from "@/lib/analysis-deployment";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,9 @@ const BACKEND = (process.env.BACKEND_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API
 const PREFIX = "/api/backend";
 
 async function proxy(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }): Promise<Response> {
+  if (isAnalysisOnly() && !isAnalysisRequestAllowed(req.nextUrl.pathname, req.method)) {
+    return Response.json({ error: { code: "not_found", message: "Page not found" } }, { status: 404 });
+  }
   const { path } = await ctx.params;
   const target = `${BACKEND}/${path.map(encodeURIComponent).join("/")}${req.nextUrl.search}`;
 

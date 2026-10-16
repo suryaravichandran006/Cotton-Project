@@ -29,6 +29,8 @@ export const qualityStatusSchema = z.object({
     per_lot: z.record(z.string(), z.object({ precision: z.number(), recall: z.number(), f1: z.number(), support: z.number().int() })),
   }).nullable().optional().default(null),
   protocol: z.object({ encoder: z.string().optional(), spatial_steps: z.number().optional(), numeric_outputs: z.number().optional(),
+    transfer_learning: z.object({ route: z.string(), stages: z.array(z.string()), transferred_tensors: z.number(),
+      source_checkpoint_sha256: z.string(), exported_backbone_sha256: z.string() }).nullable().optional(),
     matching_model: z.string().optional(), matching_image_size: z.number().optional(),
     matching_encoder: z.string().optional(), matching_resolutions: z.array(z.number()).optional(),
     regression_fold_count: z.number().optional(), final_epochs: z.number().nullable().optional() }).optional().default({}),

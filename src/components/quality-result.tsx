@@ -13,7 +13,7 @@ function display(value: number | string | null | undefined, decimals: number) {
   return value == null ? "—" : typeof value === "number" ? value.toFixed(decimals) : value;
 }
 
-export function QualityResultContent({ result, embedded = false }: { result: QualityResponse; embedded?: boolean }) {
+export function QualityResultContent({ result, embedded = false, singlePage = false }: { result: QualityResponse; embedded?: boolean; singlePage?: boolean }) {
   const [view, setView] = useState<"recorded" | "estimated">("recorded");
   const reference = result.status === "withheld" ? null : result.reference;
   const trainedMatcher = reference && (reference.method ?? "cosine_centroid") !== "cosine_centroid";
@@ -48,8 +48,8 @@ export function QualityResultContent({ result, embedded = false }: { result: Qua
           </dl>
           <div className="mt-6 flex flex-wrap gap-3">
             {reference ? <a className={buttonVariants({ variant: "primary" })} href={qualityApi.referenceCsvUrl(result.id)}>Download {reference.lot_id} lab CSV</a> : null}
-            {embedded ? <Link className={buttonVariants({ variant: "secondary" })} href={`/quality/${result.id}`}>Open saved result</Link> : <ButtonLink href="/analyze" variant="secondary">Analyze another</ButtonLink>}
-            <Link className="inline-flex min-h-10 items-center px-2 text-sm font-semibold text-accent underline underline-offset-4" href="/quality/history">Saved analyses</Link>
+            {!singlePage ? <>{embedded ? <Link className={buttonVariants({ variant: "secondary" })} href={`/quality/${result.id}`}>Open saved result</Link> : <ButtonLink href="/analyze" variant="secondary">Analyze another</ButtonLink>}
+            <Link className="inline-flex min-h-10 items-center px-2 text-sm font-semibold text-accent underline underline-offset-4" href="/quality/history">Saved analyses</Link></> : null}
           </div>
         </div>
         <figure className="overflow-hidden rounded-lg bg-surface">

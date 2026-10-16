@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "property_version": 1,
+  "model_version": "20261016T053517996518Z",
+  "model": "cnn_lstm",
+  "encoder": "timm_convnext_tiny",
+  "transfer_learning": {
+    "route": "progressive",
+    "stages": [
+      "ImageNet",
+      "cotton leaves",
+      "cotton seeds"
+    ],
+    "source_checkpoint_sha256": "3e0482b742afb07ffb16157b2eb1a8ab6f244e51f575102a5ee86e301c3f4934",
+    "source_epoch": 9,
+    "source_classes": [
+      "Broken cotton seed",
+      "Cracked cotton seed",
+      "Intact cotton seed"
+    ],
+    "transferred_tensors": 180,
+    "discarded_task_tensors": [
+      "head.fc.bias",
+      "head.fc.weight"
+    ],
+    "recorded_lineage": {
+      "transfer_source": "pt_progressive_leaf",
+      "init_checkpoint": "models/checkpoints/pt_progressive_leaf/best.pt",
+      "transfer": {
+        "checkpoint": "/content/Cotton-Project/models/checkpoints/pt_progressive_leaf/best.pt",
+        "source_architecture": "convnext_tiny",
+        "source_classes": [
+          "Alternaria Leaf Spot",
+          "Bacterial Blight",
+          "Fusarium Wilt",
+          "Healthy Leaf",
+          "Verticillium Wilt"
+        ],
+        "loaded_tensors": 180,
+        "skipped_tensors": 2,
+        "missing_keys": [
+          "head.fc.weight",
+          "head.fc.bias"
+        ],
+        "unexpected_keys": []
+      }
+    },
+    "verification_scope": "Checkpoint bytes and recorded training lineage; original training did not attest its parent checkpoint hash.",
+    "exported_backbone_sha256": "9d68eb31666e2ede2c5a20007c0cd1d83573ba0a10ffff6e2e222c3de433d8d2",
+    "available_leaf_checkpoint_sha256": "1c634d188b6c847d392cb19ce3e4ed31f613c34a335a2d0d3e54391e63a4f83b"
+  },
+  "image_size": 224,
+  "token_grid": 4,
+  "feature_channels": 768,
+  "numeric_keys": [
+    "sci",
+    "moisture",
+    "micronaire",
+    "maturity",
+    "span_length",
+    "uniformity_ratio",
+    "short_fibre",
+    "strength",
+    "elongation",
+    "reflectance",
+    "yellowness",
+    "trash_count",
+    "trash_area"
+  ],
+  "category_keys": [
+    "colour_grade",
+    "trash_grade"
+  ],
+  "category_values": [
+    [
+      "11-1",
+      "21-1",
+      "21-2",
+      "31-1",
+      "31-3",
+      "32-1",
+      "42-1"
+    ],
+    [
+      "1",
+      "2",
+      "3",
+      "8"
+    ]
+  ],
+  "reference_lots": [
+    "T1",
+    "T10",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "distance_threshold": 0.10082463175058365,
+  "label_fingerprint": "365b4a29265f93ee3f4d9c50b796a0fcd744a888f89ef10a054f2be3ff572da9",
+  "label_status": "provisional_lot_average",
+  "experimental": true,
+  "files": {
+    "backbone.pt": "9d68eb31666e2ede2c5a20007c0cd1d83573ba0a10ffff6e2e222c3de433d8d2",
+    "parameters.npz": "456eb475b0d26128ddd12df99899b6b5488cc6eada348e68b02716ae997ce255",
+    "references.npz": "06b249d545fc6c20db064c4901b5606d9ed36ffea56f7235b087c6888ac1906f",
+    "labels.json": "6558738f91c44d2643bf1ced1a5a31d9f464466b00ee99f5f583ab891d7b40d3",
+    "evaluation.json": "f1a7021c89426bce53967b70521ce37022a1b5661fcca4d75d3032aed63c8054",
+    "head.pt": "beac2d72d29de113762cc239a65b1fba40273670b48eef2ff89b2d1674936597",
+    "lot_classifier.npz": "0a0a715fe4dfe0a06d89e5669beea1fe67b267ca0266444c7ddd5900589c6c0d",
+    "manifest.json": "1d169f5fd25e1ce99b79dfe74205ceff9759feffca5d4d969e1700964cbdadc2",
+    "features.npz": "a654c075c691b566ed0a25c44564af0ded9b12a1624093f4d4427672394d86f1"
+  },
+  "matching_classifier": {
+    "schema_version": 1,
+    "kind": "linear",
+    "model": "progressive_mean_c10",
+    "name": "Leaf \u2192 seed \u2192 cotton \u00b7 ConvNeXt + linear classifier \u00b7 224px four-view average \u00b7 C=10",
+    "classes": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10"
+    ],
+    "encoder": "timm_convnext_tiny",
+    "encoder_sha256": "9d68eb31666e2ede2c5a20007c0cd1d83573ba0a10ffff6e2e222c3de433d8d2",
+    "view_mode": "mean",
+    "image_size": 224,
+    "resize_size": 236,
+    "input_sizes": [
+      224
+    ],
+    "interpolation": "bilinear",
+    "c": 10.0
+  }
+}

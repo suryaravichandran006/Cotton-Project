@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "checkpoints": {
+    "leaf": {
+      "path": "models/checkpoints/pt_progressive_leaf/best.pt",
+      "sha256": "1c634d188b6c847d392cb19ce3e4ed31f613c34a335a2d0d3e54391e63a4f83b",
+      "architecture": "convnext_tiny",
+      "classes": [
+        "Alternaria Leaf Spot",
+        "Bacterial Blight",
+        "Fusarium Wilt",
+        "Healthy Leaf",
+        "Verticillium Wilt"
+      ],
+      "epoch": 14,
+      "lineage": {
+        "transfer_source": null,
+        "init_checkpoint": null,
+        "transfer": null
+      }
+    },
+    "seed": {
+      "path": "models/checkpoints/pt_progressive_seed/best.pt",
+      "sha256": "3e0482b742afb07ffb16157b2eb1a8ab6f244e51f575102a5ee86e301c3f4934",
+      "architecture": "convnext_tiny",
+      "classes": [
+        "Broken cotton seed",
+        "Cracked cotton seed",
+        "Intact cotton seed"
+      ],
+      "epoch": 9,
+      "lineage": {
+        "transfer_source": "pt_progressive_leaf",
+        "init_checkpoint": "models/checkpoints/pt_progressive_leaf/best.pt",
+        "transfer": {
+          "checkpoint": "/content/Cotton-Project/models/checkpoints/pt_progressive_leaf/best.pt",
+          "source_architecture": "convnext_tiny",
+          "source_classes": [
+            "Alternaria Leaf Spot",
+            "Bacterial Blight",
+            "Fusarium Wilt",
+            "Healthy Leaf",
+            "Verticillium Wilt"
+          ],
+          "loaded_tensors": 180,
+          "skipped_tensors": 2,
+          "missing_keys": [
+            "head.fc.weight",
+            "head.fc.bias"
+          ],
+          "unexpected_keys": []
+        }
+      }
+    }
+  },
+  "verification_scope": "File hashes and recorded checkpoint metadata. Historical leaf-to-seed initialization is recorded, not independently hash-attested by the original training run."
+}

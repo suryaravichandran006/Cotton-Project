@@ -26,6 +26,7 @@ The primary presentation path is Overview, Literature, Progress, Architecture, M
 
 - Leaf and seed training stages are complete; final cultivar dataset access and training remain pending.
 - A separate experimental lab-quality pilot maps ten provisional T1–T10 report profiles to loose-fibre photographs. It compares mean/ridge baselines, CNN regression and a spatial CNN–LSTM head; its results do not establish cultivar accuracy or replace HVI measurements.
+- The lab pilot now reuses the restored ConvNeXt leaf → seed backbone for both matching and property-model training. Its direct, leaf-only and progressive matching controls share identical photo folds; this is exploratory known-lot evidence, separate from the pending cultivar experiment.
 - `/analyze` displays the matched T label and recorded reference lab table, separate experimental estimates, CSV exports, the working diagram and headline matching metrics together; detailed comparison tables, confusion matrices and property-error sections are omitted from this page; saved query URLs restore the immutable result. The pending cultivar experiment remains at `/final-stage`. Unsupported grades and unconfirmed fields remain unavailable rather than receiving invented values.
 - The architecture must be a clean vertical diagram that shows dataset processing, training, measured output and checkpoint handoff between stages.
 - Real report artifacts under `Ran reports/` are the source of truth for measured results.

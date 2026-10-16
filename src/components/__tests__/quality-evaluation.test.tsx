@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import { QualityEvaluation } from "@/components/quality-evaluation";
+import { QualityEvaluation, QualityWorking } from "@/components/quality-evaluation";
 import { qualityStatusSchema } from "@/lib/quality-types";
 
 const fixture = qualityStatusSchema.parse({
@@ -19,11 +19,21 @@ const fixture = qualityStatusSchema.parse({
 });
 
 describe("matching evaluation evidence", () => {
+  it("explains actual progressive transfer without claiming the old independent encoders", () => {
+    render(<QualityWorking status={{ ...fixture, protocol: { matching_encoder: "timm_convnext_tiny", transfer_learning: {
+      route: "progressive", stages: ["ImageNet", "cotton leaves", "cotton seeds"], transferred_tensors: 180,
+      source_checkpoint_sha256: "synthetic", exported_backbone_sha256: "synthetic",
+    } } }} />);
+    expect(screen.getByText(/ImageNet → cotton leaves → cotton seeds → cotton analysis/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Progressive feature extraction" })).toBeInTheDocument();
+    expect(screen.queryByText(/MobileNetV3/)).not.toBeInTheDocument();
+    expect(screen.getByText(/old leaf and seed output layers are discarded/)).toBeInTheDocument();
+  });
   it("keeps headline accuracy and its scope while removing the detailed comparisons", () => {
     render(<QualityEvaluation status={fixture} />);
     const headline = screen.getByText("Accuracy", { selector: "dt" }).parentElement!;
     expect(within(headline).getByText("75.0%")).toBeInTheDocument();
-    expect(screen.getByText(/Target: 85.0%.*not yet met/)).toBeInTheDocument();
+    expect(screen.queryByText(/Target: 85.0%/)).not.toBeInTheDocument();
     expect(screen.getByText(/headline score evaluates the training-only selection procedure/)).toBeInTheDocument();
     expect(screen.queryByText("90.0%")).not.toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();

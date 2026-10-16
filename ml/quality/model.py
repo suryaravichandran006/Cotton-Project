@@ -15,7 +15,13 @@ TOKEN_GRID = 4
 FEATURE_CHANNELS = 576
 
 
-def make_encoder(state_path, device: str = "cpu"):
+def make_encoder(state_path, device: str = "cpu", encoder_name: str = "torchvision_mobilenet_v3_small_imagenet1k_v1"):
+    if encoder_name == "timm_convnext_tiny":
+        from ml.quality.progressive_encoder import TimmCottonEncoder
+
+        return TimmCottonEncoder(state_path).to(device)
+    if encoder_name != "torchvision_mobilenet_v3_small_imagenet1k_v1":
+        raise ValueError("Unsupported property encoder")
     encoder = mobilenet_v3_small(weights=None).features
     encoder.load_state_dict(torch.load(state_path, map_location="cpu", weights_only=True), strict=True)
     return encoder.eval().requires_grad_(False).to(device)
@@ -25,7 +31,12 @@ def make_encoder(state_path, device: str = "cpu"):
 def image_tokens(encoder, images: list[Image.Image], device: str = "cpu") -> np.ndarray:
     arrays = [preprocess_image(load_image(im), PreprocessConfig(image_size=IMAGE_SIZE))[0] for im in images]
     tensor = torch.from_numpy(np.stack(arrays)).to(device)
-    features = torch.nn.functional.adaptive_avg_pool2d(encoder(tensor), (TOKEN_GRID, TOKEN_GRID))
+    features = encoder(tensor)
+    # Apple's backend cannot pool a 7x7 map to 4x4; keep this exact operation
+    # on CPU there, matching the CPU serving path rather than resizing features.
+    if features.device.type == "mps":
+        features = features.cpu()
+    features = torch.nn.functional.adaptive_avg_pool2d(features, (TOKEN_GRID, TOKEN_GRID))
     return features.flatten(2).transpose(1, 2).cpu().numpy()
 
 

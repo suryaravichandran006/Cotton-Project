@@ -1,3 +1,4 @@
 models/quality/runs/**/*.pt filter=lfs diff=lfs merge=lfs -text
 models/quality/runs/**/*.npz filter=lfs diff=lfs merge=lfs -text
+models/checkpoints/pt_progressive_*/best.pt filter=lfs diff=lfs merge=lfs -text
 *.pdf binary

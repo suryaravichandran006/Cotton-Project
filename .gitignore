@@ -1,6 +1,7 @@
 # ---- secrets / env
 .env
 .env.local
+.env.hostinger
 .env.*.local
 backend/.env
 
@@ -36,6 +37,11 @@ models/quality/*
 !models/quality/runs/
 models/quality/runs/*
 !models/quality/runs/20261014T100934100536Z/
+!models/quality/runs/20261016T053517996518Z/
+!models/checkpoints/pt_progressive_leaf/
+!models/checkpoints/pt_progressive_seed/
+models/checkpoints/pt_progressive_leaf/*
+models/checkpoints/pt_progressive_seed/*
 !models/checkpoints/.gitkeep
 !models/exports/.gitkeep
 reports/
@@ -49,6 +55,9 @@ backend/storage/
 
 # Published pilot weights are stored in Git LFS; other generated weights stay ignored.
 !models/quality/runs/20261014T100934100536Z/*.pt
+!models/quality/runs/20261016T053517996518Z/*.pt
+!models/checkpoints/pt_progressive_leaf/best.pt
+!models/checkpoints/pt_progressive_seed/best.pt
 
 # ---- os / editor
 .DS_Store

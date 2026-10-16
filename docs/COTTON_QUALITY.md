@@ -1,6 +1,25 @@
 # Cotton lab-quality pilot
 
-This workflow estimates cotton properties from one RGB photograph of loose fibre. It is independent of the existing cultivar classifier and leaf/seed experiments. The old pending cultivar experiment is at `/final-stage`; quality analysis is at `/analyze`.
+This workflow estimates cotton properties from one RGB photograph of loose fibre. The restored leaf → seed ConvNeXt backbone now feeds the lab pilot's matching and property tasks. Its T1–T10 lot labels are a different task from the pending cultivar classifier at `/final-stage`; quality analysis is at `/analyze`.
+
+## Progressive transfer from the restored checkpoints
+
+The supplied original files are identified by their experiment metadata, not their download names. `data/metadata/transfer_checkpoints.json` records their SHA-256 fingerprints: `models/checkpoints/pt_progressive_leaf/best.pt` is the five-class leaf model, and `models/checkpoints/pt_progressive_seed/best.pt` is the three-class seed model. The seed metadata records 180 tensors transferred from the leaf experiment, with both old classifier tensors discarded. Historical initialization is recorded in that metadata; the original training did not record a parent checkpoint checksum.
+
+```sh
+python -m ml.quality.download_progressive_baseline
+python -m ml.quality.train_progressive --allow-provisional --activate
+# Apple GPU when available: add --device mps
+# Equivalent: make quality-progressive DEVICE=mps
+```
+
+The converter uses PyTorch's restricted weights loader (with only the standard TorchVersion metadata type added), verifies the original experiment and architecture, discards both task-head tensors unconditionally, and strictly loads all 180 backbone tensors into the same timm ConvNeXt implementation used for the earlier training. It never substitutes torchvision weights or a random encoder. The serving export contains tensor weights only.
+
+The final backbone is frozen. New cotton classifiers are trained on its features; mean, ridge, CNN and spatial CNN–LSTM property heads are evaluated and refitted using its 768-channel spatial features. Both serving branches share one verified backbone instance. This is progressive transfer with new final-task heads, not end-to-end fine-tuning of the backbone on fibre images.
+
+Matching controls compare (1) the original official `timm/convnext_tiny.in12k_ft_in1k` pretraining, (2) the restored leaf checkpoint and (3) the restored leaf → seed checkpoint. All use identical eligible photographs, transforms, candidate settings and nested inner/outer image splits. The progressive route is fixed by the research question; test scores do not select the installed route. No independently trained ImageNet → seed checkpoint was supplied, so that fourth control is unavailable. The earlier torchvision/ImageNet-1K 85.1% result is a historical baseline, not the new model's score or a controlled estimate of transfer benefit.
+
+The active run `20261016T053517996518Z` measures **231/303 = 76.2%** progressive matching accuracy, versus **241/303 = 79.5%** for the matched direct control and **210/303 = 69.3%** for leaf-only transfer. Progressive transfer underperforms the direct control by 3.3 percentage points; no improvement or 85% target achievement is claimed. The new property comparison selects CNN–LSTM by validation MAE. Exact route comparisons and final-task evaluations remain in the new immutable `evaluation.json`. The compact page shows the actual installed model's headline metrics and a short transfer sequence without restoring the removed detailed tables. An independent external evaluation is still required.
 
 ## Evidence and scope
 
@@ -12,7 +31,7 @@ The labels remain `provisional_lot_average`. Handwritten page numbers support th
 
 SL2 and UR retain their instrument codes: span percentage is not established, and these must not be silently renamed UHML/UI. Amt has an unconfirmed meaning and is not estimated. The source Grade field is blank. Moisture labels refer to the lab measurement date and may not describe the later photographed material.
 
-## Prepare and train
+## Original direct-transfer baseline
 
 From the repository root with the Python requirements installed:
 
@@ -46,7 +65,7 @@ Every candidate uses the same encoder, images and lot-isolated splits:
 - `cnn`: frozen CNN encoder with a learned projection/pooling regression head and categorical heads.
 - `cnn_lstm`: the same encoder and projection, followed by one small LSTM over a 4×4 spatial grid in row-major order; independent numeric and categorical outputs.
 
-The LSTM sequence is spatial features of one photograph. T1–T10 are never treated as time steps. The ImageNet encoder stays frozen: this is head training, not end-to-end backbone fine-tuning or proof of progressive leaf-to-seed transfer. Those research checkpoints are not present in this checkout.
+The LSTM sequence is spatial features of one photograph. T1–T10 are never treated as time steps. The encoder stays frozen during final-task head training. The original command above uses direct ImageNet MobileNet features; `train_progressive` uses the restored timm leaf → seed backbone for all these candidates. Their property-model comparisons must be evaluated separately, rather than carrying over the earlier model's metrics.
 
 Each of five outer folds holds out two whole lots, uses two other lots for validation, and six for training. Numeric target scaling and feature normalization are fitted inside the training partition. Lot-balanced loss prevents larger photograph folders dominating target fitting. Neural heads use Huber regression loss and categorical cross-entropy, with validation early stopping.
 
@@ -58,7 +77,7 @@ After comparison, the selected architecture is fitted on all ten lots using the 
 
 The nearest-reference T label uses the frozen CNN’s pooled visual features and cosine similarity to lot centroids. It is independent of the property regression head. Five stratified image folds measure retrieval among the same ten known lots: every query photograph is excluded from its fold’s reference centroids, and each photograph is queried once. Physical lots and unknown capture sessions still overlap, so this does not establish origin identification or performance on unseen lots.
 
-The original centroid matcher measured 161 correct matches among 303 held-out photographs (53.1% accuracy). The installed trained ConvNeXt selection procedure measured 258/303 (85.1%) in nested image cross-validation; see the upgrade protocol below. Its immutable evaluation stores fold assignments, true and predicted labels, overall and balanced accuracy, macro precision/recall/F1, the confusion matrix and per-lot metrics. The analysis page shows the working diagram and headline matching metrics, then ends at the target status. At the user’s request, the matching-method table and all subsequent evaluation details were removed from this page to reduce information overload. Full candidate comparisons, confusion matrices and numeric MAE/RMSE remain in the immutable evaluation artifact. Regression errors are never converted into an “accuracy” percentage.
+The original centroid matcher measured 161 correct matches among 303 held-out photographs (53.1% accuracy). The historical direct-transfer torchvision ConvNeXt selection procedure measured 258/303 (85.1%) in nested image cross-validation; see the upgrade protocol below. Its immutable evaluation stores fold assignments, true and predicted labels, overall and balanced accuracy, macro precision/recall/F1, the confusion matrix and per-lot metrics. The analysis page shows the working diagram and headline matching metrics, then ends after the matching evaluation scope. The target-status line is omitted from the page. At the user’s request, the matching-method table and all subsequent evaluation details were removed from this page to reduce information overload. Full candidate comparisons, confusion matrices and numeric MAE/RMSE remain in the immutable evaluation artifact. Regression errors are never converted into an “accuracy” percentage.
 
 ## Upgrade known-lot matching
 
@@ -113,7 +132,7 @@ Each immutable run is under `models/quality/runs/<UTC timestamp>/`:
 
 `--activate` atomically replaces `models/quality/active.json` only after training finishes. The service verifies contained paths, checksums, task versions, target order, normalization and reference shapes before loading. It never falls back to mock measurements. Set `QUALITY_MODEL_PATH` to another active pointer when needed. All artifact paths in the pointer are relative to its directory.
 
-The published active pointer and complete run `20261014T100934100536Z` are versioned. Binary `.pt` and `.npz` files use Git LFS: install Git LFS before cloning, then run `git lfs pull` to restore actual weights rather than pointer text. The original lab PDF and photographs are included in `Lab Reports/`. Other generated model runs, download caches, incomplete trials, uploads and databases stay ignored. Running another machine still requires installing dependencies and applying migrations; pushing the repository does not deploy it.
+The active pointer now selects progressive run `20261016T053517996518Z`. Preserve its full bundle together with the pointer, the original checkpoints and their hash manifest when publishing. The original published baseline run `20261014T100934100536Z` remains available separately. Binary `.pt` and `.npz` files use Git LFS: install Git LFS before cloning, then run `git lfs pull` to restore actual weights rather than pointer text. The original lab PDF and photographs are included in `Lab Reports/`. Other generated model runs, download caches, incomplete trials, uploads and databases stay ignored. Running another machine still requires installing dependencies and applying migrations; pushing the repository does not deploy it.
 
 For the local container stack, `INSTALL_ML=true docker compose up --build` installs quality inference dependencies. Models and the supplied Lab Reports folder are mounted read-only. `MODEL_MODE` may remain `mock` for the independent cultivar demonstration; quality analysis loads its own trained artifact.
 

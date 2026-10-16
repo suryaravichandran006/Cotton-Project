@@ -1,0 +1,27 @@
+.git
+.env
+.env.*
+backend/.env
+.venv
+venv
+node_modules
+.next*
+out
+coverage
+playwright-report
+test-results
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.impeccable
+backend/storage
+models/checkpoints
+models/quality
+models/exports
+data/raw
+data/processed
+reports
+Lab Reports
+.DS_Store

@@ -52,7 +52,7 @@ The primary site is a concise, projector-first research briefing:
 
 Deeper supporting routes remain available outside the main presentation path:
 
-The local cotton lab-quality pilot is now at `/analyze`, with saved analyses at `/quality/history`. The pending cultivar experiment has moved to `/final-stage`. This is a separate task: a frozen ImageNet encoder compares mean/ridge baselines, CNN regression and a spatial CNN–LSTM head against ten provisional lab-report profiles. It does not establish final cultivar accuracy or laboratory-grade property measurement. See [docs/COTTON_QUALITY.md](docs/COTTON_QUALITY.md) for the complete mapping, training, evaluation, artifact and API workflow. `make quality-train` prepares labels, downloads official weights, compares models and activates the experimental local model.
+The local cotton lab-quality pilot is now at `/analyze`, with saved analyses at `/quality/history`. The pending cultivar experiment has moved to `/final-stage`. This is a separate final task using the restored leaf → seed ConvNeXt backbone: new matching and property heads learn ten provisional lab-report profiles. Direct and leaf-only matching controls use the same photo splits. It does not establish final cultivar accuracy or laboratory-grade property measurement. See [docs/COTTON_QUALITY.md](docs/COTTON_QUALITY.md) for the complete mapping, training, evaluation, artifact and API workflow. `make quality-progressive` compares the transfer routes, trains property heads and activates the progressive pilot. The original direct-transfer workflow remains available through `make quality-train`.
 
 - `/research` — detailed problem, hypothesis and controlled experiment design
 - `/models/leaf` — intermediate model 1
@@ -99,7 +99,7 @@ git lfs install
 git lfs pull
 ```
 
-This restores the binary weights for the `/analyze` workflow. Its 85.1% matching score is an exploratory same-known-lot image evaluation, not external/new-lot or physical lab-measurement accuracy. New local training runs, uploaded photos and databases are excluded from Git. The independent cultivar model still uses its separate registry.
+This restores the binary weights for the `/analyze` workflow. The active progressive model measures 76.2% known-lot matching accuracy; the matched direct-transfer control measures 79.5%. Progressive transfer has not improved over its direct control here. The earlier 85.1% torchvision baseline is preserved separately. These are exploratory same-known-lot image results, not external/new-lot or physical lab-measurement accuracy. New local training runs, uploaded photos and databases are excluded from Git. The independent cultivar model still uses its separate registry.
 
 ### Python environment
 

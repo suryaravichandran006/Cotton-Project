@@ -66,6 +66,7 @@ jobs:
       - run: pip install -r backend/requirements.txt
       - name: Install CPU quality inference dependencies
         run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install timm
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: python scripts/make_sample_images.py
@@ -83,7 +84,8 @@ jobs:
           with urllib.request.urlopen('http://127.0.0.1:8000/api/v1/quality/status', timeout=60) as response:
               status = json.load(response)
           assert status['status'] == 'ready', status['message']
-          assert status['matching']['installed_model'] == 'convnext_multiscale_c1'
+          assert status['protocol']['transfer_learning']['route'] == 'progressive'
+          assert status['protocol']['matching_encoder'] == 'timm_convnext_tiny'
           print('Trained quality model ready:', status['matching']['installed_name'])
           PY
       - name: Build and start frontend (proxy mode)

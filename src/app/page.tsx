@@ -11,6 +11,8 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/page-header";
 import { StatusBadge } from "@/components/presentation";
+import { isAnalysisOnly } from "@/lib/analysis-deployment";
+import AnalyzePage from "./analyze/page";
 
 const stages = [
   { number: "01", title: "ImageNet", detail: "pretrained visual features", tone: "border-danger/20 bg-danger-soft", text: "text-danger" },
@@ -19,7 +21,8 @@ const stages = [
   { number: "04", title: "Raw cotton", detail: "final grade task", tone: "border-gold/25 bg-gold-soft", text: "text-gold-strong", status: "Pending" },
 ] as const;
 
-export default function HomePage() {
+export default function HomePage({ searchParams }: { searchParams: Promise<{ analysis?: string | string[] }> }) {
+  if (isAnalysisOnly()) return <AnalyzePage searchParams={searchParams} />;
   return (
     <>
       <section className="border-b border-line bg-surface">

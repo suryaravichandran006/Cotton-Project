@@ -112,6 +112,10 @@ quality-convnext: ## Compare ConvNeXt classifiers at two resolutions and activat
 	$(PYTHON) -m ml.quality.download_matching_backbone
 	$(PYTHON) -m ml.quality.train_convnext_matching --allow-provisional --activate
 
+quality-progressive: ## Transfer restored leaf/seed weights into cotton matching and property models
+	$(PYTHON) -m ml.quality.download_progressive_baseline
+	$(PYTHON) -m ml.quality.train_progressive --allow-provisional --activate --device $(or $(DEVICE),cpu)
+
 # ---------------------------------------------------------------- docker
 docker-build: ## Build images
 	docker compose build
@@ -126,4 +130,4 @@ clean: ## Remove caches and build artefacts
 	rm -rf .next node_modules/.cache .pytest_cache .ruff_cache reports/dataset_audit
 	find . -name "__pycache__" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 
-.PHONY: help install install-backend install-ml install-frontend env samples migrate backend frontend dev test test-backend test-frontend test-e2e lint format smoke audit split train train-all evaluate export registry quality-prepare quality-backbone quality-train quality-matching quality-convnext docker-build docker-up docker-down clean
+.PHONY: help install install-backend install-ml install-frontend env samples migrate backend frontend dev test test-backend test-frontend test-e2e lint format smoke audit split train train-all evaluate export registry quality-prepare quality-backbone quality-train quality-matching quality-convnext quality-progressive docker-build docker-up docker-down clean

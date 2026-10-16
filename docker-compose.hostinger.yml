@@ -1,0 +1,61 @@
+# Separate deployment on a shared VPS. Never use the existing sites' Compose project.
+name: cotton-analysis
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/hostinger/Dockerfile.backend
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      MODEL_MODE: mock # Separate unused cultivar demo; quality always uses the real trained bundle.
+      QUALITY_MODEL_PATH: models/quality/active.json
+      DATABASE_URL: sqlite:////app/backend/storage/cottonvision.db
+      UPLOAD_DIR: /app/backend/storage/uploads
+      GRADCAM_DIR: /app/backend/storage/gradcam
+      PUBLIC_BASE_URL: ${COTTON_PUBLIC_ORIGIN:?Set COTTON_PUBLIC_ORIGIN to the HTTPS site origin}/api/backend
+      CORS_ORIGINS: ${COTTON_PUBLIC_ORIGIN}
+      LOG_JSON: "true"
+      MAX_UPLOAD_MB: "10"
+      INFERENCE_TIMEOUT_S: "60"
+    volumes:
+      - cotton-storage:/app/backend/storage
+      - ./models/quality:/app/models/quality:ro
+      - type: bind
+        source: ./Lab Reports/Lab Cotton Test Values 40's T1-T10.pdf
+        target: /app/Lab Reports/Lab Cotton Test Values 40's T1-T10.pdf
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; s=json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/v1/quality/status',timeout=30)); assert s['status']=='ready' and s['protocol']['transfer_learning']['route']=='progressive'"]
+      interval: 30s
+      timeout: 40s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/hostinger/Dockerfile.frontend
+    restart: unless-stopped
+    environment:
+      ANALYSIS_ONLY: "true"
+      BACKEND_INTERNAL_URL: http://backend:8000
+    # Inspect availability before deployment. Only the existing web server can reach this port.
+    ports:
+      - 127.0.0.1:${COTTON_LOCAL_PORT:-3180}:3000
+    depends_on:
+      backend: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+volumes:
+  cotton-storage:

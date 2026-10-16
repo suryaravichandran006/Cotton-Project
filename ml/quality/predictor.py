@@ -60,13 +60,16 @@ class QualityPredictor:
         if sha256(artifact_path) != pointer["sha256"]:
             raise QualityArtifactError("Active artifact checksum mismatch")
         meta = json.loads(artifact_path.read_text())
+        encoder_name = meta.get("encoder", "torchvision_mobilenet_v3_small_imagenet1k_v1")
+        channels = 768 if encoder_name == "timm_convnext_tiny" else FEATURE_CHANNELS
         if (
             meta.get("schema_version") != 1
             or meta.get("property_version") != PROPERTY_VERSION
             or meta.get("numeric_keys") != NUMERIC_KEYS
             or meta.get("category_keys") != CATEGORY_KEYS
             or meta.get("model") not in {"mean", "ridge", "cnn", "cnn_lstm"}
-            or meta.get("feature_channels") != FEATURE_CHANNELS
+            or encoder_name not in {"timm_convnext_tiny", "torchvision_mobilenet_v3_small_imagenet1k_v1"}
+            or meta.get("feature_channels") != channels
             or meta.get("image_size") != IMAGE_SIZE
             or meta.get("token_grid") != TOKEN_GRID
             or meta.get("experimental") is not True
@@ -78,6 +81,8 @@ class QualityPredictor:
             required.add("head.pt")
         classifier_config = meta.get("matching_classifier")
         if classifier_config:
+            if encoder_name == "timm_convnext_tiny" and classifier_config.get("encoder") != "timm_convnext_tiny":
+                raise QualityArtifactError("Progressive matching and properties must share the transferred backbone")
             if classifier_config.get("kind") not in {"linear", "cnn"}:
                 raise QualityArtifactError("Unsupported lot classifier kind")
             if set(classifier_config.get("classes", [])) != set(meta["reference_lots"]):
@@ -87,6 +92,9 @@ class QualityPredictor:
                 required.add("lot_backbone.pt")
                 if classifier_config.get("encoder_sha256") != meta.get("files", {}).get("lot_backbone.pt"):
                     raise QualityArtifactError("Lot classifier encoder fingerprint mismatch")
+            if classifier_config.get("encoder") == "timm_convnext_tiny":
+                if encoder_name != "timm_convnext_tiny" or classifier_config.get("encoder_sha256") != meta.get("files", {}).get("backbone.pt"):
+                    raise QualityArtifactError("Progressive classifier must use the verified property backbone")
         if not required <= set(meta.get("files", {})):
             raise QualityArtifactError("Incomplete model files")
         for name in required:
@@ -96,18 +104,28 @@ class QualityPredictor:
         if fingerprint(self.labels) != meta["label_fingerprint"]:
             raise QualityArtifactError("Lab labels do not match model")
         self.report = json.loads((root / "evaluation.json").read_text())
+        if encoder_name == "timm_convnext_tiny":
+            lineage = meta.get("transfer_learning") or {}
+            if (
+                lineage.get("route") != "progressive"
+                or lineage.get("stages") != ["ImageNet", "cotton leaves", "cotton seeds"]
+                or lineage.get("transferred_tensors") != 180
+                or lineage.get("exported_backbone_sha256") != meta["files"]["backbone.pt"]
+                or self.report.get("transfer_learning") != lineage
+            ):
+                raise QualityArtifactError("Missing or inconsistent progressive transfer lineage")
         self.meta = meta
         with np.load(root / "parameters.npz", allow_pickle=False) as archive:
             self.params = {k: archive[k].copy() for k in archive.files}
         shapes = {
-            "x_mean": (FEATURE_CHANNELS,),
-            "x_scale": (FEATURE_CHANNELS,),
+            "x_mean": (channels,),
+            "x_scale": (channels,),
             "y_mean": (len(NUMERIC_KEYS),),
             "y_scale": (len(NUMERIC_KEYS),),
             "category_defaults": (len(CATEGORY_KEYS),),
         }
         if meta["model"] == "ridge":
-            shapes.update({"coef": (len(NUMERIC_KEYS), FEATURE_CHANNELS), "intercept": (len(NUMERIC_KEYS),)})
+            shapes.update({"coef": (len(NUMERIC_KEYS), channels), "intercept": (len(NUMERIC_KEYS),)})
         for key, shape in shapes.items():
             if key not in self.params or self.params[key].shape != shape or not np.isfinite(self.params[key]).all():
                 raise QualityArtifactError(f"Invalid parameter: {key}")
@@ -115,17 +133,17 @@ class QualityPredictor:
             raise QualityArtifactError("Invalid normalization scale")
         with np.load(root / "references.npz", allow_pickle=False) as archive:
             self.references = archive["vectors"].copy()
-        if self.references.shape != (len(meta["reference_lots"]), FEATURE_CHANNELS) or not np.isfinite(self.references).all():
+        if self.references.shape != (len(meta["reference_lots"]), channels) or not np.isfinite(self.references).all():
             raise QualityArtifactError("Invalid reference vectors")
-        self.encoder = make_encoder(root / "backbone.pt")
+        self.encoder = make_encoder(root / "backbone.pt", encoder_name=encoder_name)
         self.lot_classifier = None
         if classifier_config:
             from ml.quality.lot_classifier import InstalledLotClassifier
 
-            self.lot_classifier = InstalledLotClassifier(root, classifier_config, root / "backbone.pt")
+            self.lot_classifier = InstalledLotClassifier(root, classifier_config, root / "backbone.pt", property_encoder=self.encoder)
         self.head = None
         if meta["model"] in {"cnn", "cnn_lstm"}:
-            self.head = QualityHead(meta["model"], FEATURE_CHANNELS, len(NUMERIC_KEYS), [len(v) for v in meta["category_values"]])
+            self.head = QualityHead(meta["model"], channels, len(NUMERIC_KEYS), [len(v) for v in meta["category_values"]])
             self.head.load_state_dict(torch.load(root / "head.pt", map_location="cpu", weights_only=True), strict=True)
             self.head.eval()
         self.metrics = next(item for item in self.report["comparison"] if item["selected"])
@@ -145,14 +163,19 @@ class QualityPredictor:
             "comparison": self.report["comparison"],
             "matching": self.report.get("matching_evaluation"),
             "protocol": {
-                "encoder": "ImageNet-pretrained MobileNetV3-Small (frozen)",
+                "encoder": "ConvNeXt-Tiny transferred through cotton leaves and seeds (frozen for final tasks)"
+                if self.meta.get("encoder") == "timm_convnext_tiny"
+                else "ImageNet-pretrained MobileNetV3-Small (frozen)",
+                "transfer_learning": self.meta.get("transfer_learning"),
                 "spatial_steps": TOKEN_GRID * TOKEN_GRID,
                 "numeric_outputs": len(NUMERIC_KEYS),
                 "regression_fold_count": len(self.report.get("splits", [])),
                 "final_epochs": self.report.get("final_refit", {}).get("epochs"),
                 "matching_model": self.meta.get("matching_classifier", {}).get("name", "Cosine lot centroid"),
                 "matching_image_size": self.meta.get("matching_classifier", {}).get("image_size", IMAGE_SIZE),
-                "matching_encoder": self.meta.get("matching_classifier", {}).get("encoder", "mobilenet_v3_small"),
+                "matching_encoder": self.meta.get("matching_classifier", {}).get(
+                    "encoder", "timm_convnext_tiny" if self.meta.get("encoder") == "timm_convnext_tiny" else "mobilenet_v3_small"
+                ),
                 "matching_resolutions": self.meta.get("matching_classifier", {}).get(
                     "input_sizes", [self.meta.get("matching_classifier", {}).get("image_size", IMAGE_SIZE)]
                 ),

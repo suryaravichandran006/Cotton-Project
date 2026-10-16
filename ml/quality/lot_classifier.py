@@ -136,7 +136,7 @@ def cnn_scores(model: LotCNN, features: torch.Tensor, batch_size: int = 24) -> n
 class InstalledLotClassifier:
     """Load only numeric arrays or weights-only Torch checkpoints, never pickled estimators."""
 
-    def __init__(self, root, config: dict, backbone_path):
+    def __init__(self, root, config: dict, backbone_path, property_encoder=None):
         if config.get("schema_version") != 1 or config.get("kind") not in {"linear", "cnn"}:
             raise ValueError("Incompatible lot classifier")
         self.config, self.classes = config, config["classes"]
@@ -147,7 +147,7 @@ class InstalledLotClassifier:
             raise ValueError("Unsupported lot classifier image size")
         self.encoder_name = config.get("encoder", "mobilenet_v3_small")
         self.view_mode = config.get("view_mode", "single")
-        if self.encoder_name not in {"mobilenet_v3_small", "convnext_tiny"} or self.view_mode not in {
+        if self.encoder_name not in {"mobilenet_v3_small", "convnext_tiny", "timm_convnext_tiny"} or self.view_mode not in {
             "single",
             "mean",
             "original_and_mean",
@@ -155,14 +155,19 @@ class InstalledLotClassifier:
             "multiscale",
         }:
             raise ValueError("Unsupported classifier encoder or view mode")
-        if self.encoder_name == "convnext_tiny":
+        if self.encoder_name in {"convnext_tiny", "timm_convnext_tiny"}:
             if self.kind != "linear" or (self.view_mode == "highres" and self.image_size != 336) or (self.view_mode != "highres" and self.image_size != 224):
                 raise ValueError("Incompatible ConvNeXt classifier")
             if config.get("resize_size") != (354 if self.view_mode == "highres" else 236):
                 raise ValueError("Incompatible ConvNeXt resize configuration")
-            model = convnext_tiny(weights=None)
-            model.load_state_dict(torch.load(root / "lot_backbone.pt", map_location="cpu", weights_only=True), strict=True)
-            self.encoder = nn.Sequential(model.features, model.avgpool, model.classifier[0], nn.Flatten())
+            if self.encoder_name == "timm_convnext_tiny":
+                from ml.quality.progressive_encoder import TimmCottonEncoder
+
+                self.encoder = property_encoder if isinstance(property_encoder, TimmCottonEncoder) else TimmCottonEncoder(backbone_path)
+            else:
+                model = convnext_tiny(weights=None)
+                model.load_state_dict(torch.load(root / "lot_backbone.pt", map_location="cpu", weights_only=True), strict=True)
+                self.encoder = nn.Sequential(model.features, model.avgpool, model.classifier[0], nn.Flatten())
             self.transform = ConvNeXt_Tiny_Weights.IMAGENET1K_V1.transforms()
             self.high_transform = ConvNeXt_Tiny_Weights.IMAGENET1K_V1.transforms(crop_size=336, resize_size=354)
             channels = 1536 if self.view_mode in {"original_and_mean", "multiscale"} else 768
@@ -194,15 +199,16 @@ class InstalledLotClassifier:
 
     @torch.inference_mode()
     def predict(self, image, original_tokens: np.ndarray) -> str:
-        if self.encoder_name == "convnext_tiny":
+        if self.encoder_name in {"convnext_tiny", "timm_convnext_tiny"}:
             from PIL import Image, ImageOps
 
             original = load_image(image)
+            encode = self.encoder.pooled if self.encoder_name == "timm_convnext_tiny" else self.encoder
             if self.view_mode == "highres":
-                vector = self.encoder(self.high_transform(original)[None]).numpy()[0]
+                vector = encode(self.high_transform(original)[None]).numpy()[0]
             elif self.view_mode == "multiscale":
-                standard = self.encoder(self.transform(original)[None]).numpy()[0]
-                high = self.encoder(self.high_transform(original)[None]).numpy()[0]
+                standard = encode(self.transform(original)[None]).numpy()[0]
+                high = encode(self.high_transform(original)[None]).numpy()[0]
                 vector = np.concatenate([standard, high])
             else:
                 variants = (
@@ -210,7 +216,7 @@ class InstalledLotClassifier:
                     if self.view_mode == "single"
                     else [original, ImageOps.mirror(original), original.transpose(Image.Transpose.ROTATE_90), original.transpose(Image.Transpose.ROTATE_180)]
                 )
-                features = self.encoder(torch.stack([self.transform(variant) for variant in variants])).numpy()
+                features = encode(torch.stack([self.transform(variant) for variant in variants])).numpy()
                 vector = features[0] if self.view_mode == "single" else features.mean(0)
                 if self.view_mode == "original_and_mean":
                     vector = np.concatenate([features[0], vector])

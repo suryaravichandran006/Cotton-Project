@@ -2,7 +2,7 @@
 # Install PyTorch first for your platform — see docs/TRAINING.md §3:
 #   CUDA / CPU:   https://pytorch.org/get-started/locally/
 #   Apple Silicon: pip install torch torchvision   (MPS is built in)
-torch>=2.2
+torch>=2.6
 torchvision>=0.17
 timm>=0.9.12
 albumentations>=1.4

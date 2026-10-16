@@ -18,7 +18,7 @@ function saveResultUrl(id: string | null) {
   window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}`);
 }
 
-export function QualityAnalyze({ initialAnalysisId = null }: { initialAnalysisId?: string | null }) {
+export function QualityAnalyze({ initialAnalysisId = null, singlePage = false }: { initialAnalysisId?: string | null; singlePage?: boolean }) {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<QualityResponse | null>(null);
   const [savedId, setSavedId] = useState<string | null>(initialAnalysisId);
@@ -48,13 +48,13 @@ export function QualityAnalyze({ initialAnalysisId = null }: { initialAnalysisId
         <p className="text-sm leading-6 text-ink-soft">Use loose cotton filling the frame, with even light and no ruler. T1–T10 are reference lot IDs; a visual match does not verify origin.</p>
         {mutation.isPending ? <p role="status" className="text-sm leading-6 text-ink-soft">Checking the photo → extracting features → matching a reference → estimating properties → saving the result.</p> : null}
         {mutation.isError ? <ErrorState error={mutation.error} title="Analysis could not finish" onRetry={() => { if (file) mutation.mutate(file); }} /> : null}
-        <Link href="/quality/history" className="inline-flex min-h-10 items-center text-sm font-semibold text-accent underline underline-offset-4">Open saved analyses</Link>
+        {!singlePage ? <Link href="/quality/history" className="inline-flex min-h-10 items-center text-sm font-semibold text-accent underline underline-offset-4">Open saved analyses</Link> : null}
       </aside>
     </form>
     <div ref={resultRef} className="scroll-mt-24" aria-live="polite" aria-busy={mutation.isPending}>
       {savedId && saved.isPending && !result ? <p role="status">Loading your saved result…</p> : null}
       {savedId && saved.isError && !result ? <ErrorState error={saved.error} title="Saved result unavailable" onRetry={() => void saved.refetch()} /> : null}
-      {currentResult ? <QualityResultContent key={currentResult.id} result={currentResult} embedded /> : null}
+      {currentResult ? <QualityResultContent key={currentResult.id} result={currentResult} embedded singlePage={singlePage} /> : null}
     </div>
     {status.data?.status === "ready" ? <>{currentResult && currentResult.model.version !== status.data.version ? <p className="border-t border-line pt-4 text-sm leading-6 text-ink-soft">This saved result used an earlier model version. The working and evaluation below describe the currently installed model.</p> : null}<QualityWorking status={status.data} /><QualityEvaluation status={status.data} /></> : null}
   </div>;

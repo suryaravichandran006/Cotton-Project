@@ -15,7 +15,8 @@ const NAV = [
   { href: "/implementation", label: "Implementation" },
   { href: "/results", label: "Results" },
   { href: "/progress", label: "Progress" },
-  { href: "/analyze", label: "Final Stage", wip: true },
+  { href: "/final-stage", label: "Final Stage", wip: true },
+  { href: "/analyze", label: "Analyze" },
 ] as const;
 
 export function Logo({ className }: { className?: string }) {
@@ -43,7 +44,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur-xl">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" aria-label={`${SITE.name} home`}><Logo /></Link>
-        <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-0.5 xl:flex">
           {NAV.map((item) => {
             const active = isActive(item.href);
             return (
@@ -66,7 +67,7 @@ export function SiteHeader() {
         </nav>
         <button
           type="button"
-          className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-ink lg:hidden"
+          className="grid h-10 w-10 place-items-center rounded-full border border-line bg-surface text-ink xl:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -77,7 +78,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line bg-surface px-4 py-4 lg:hidden">
+        <nav id="mobile-nav" aria-label="Mobile" className="border-t border-line bg-surface px-4 py-4 xl:hidden">
           <div className="grid gap-1">
             {NAV.map((item) => (
               <Link

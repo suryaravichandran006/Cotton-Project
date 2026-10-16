@@ -84,7 +84,7 @@ async function parseError(res: Response): Promise<ApiError> {
   return new ApiError("http", `Request failed with status ${res.status}`, { status: res.status, code: fallback, requestId });
 }
 
-async function request<T>(path: string, schema: ZodType<T>, init: RequestInit = {}, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
+export async function request<T>(path: string, schema: ZodType<T>, init: RequestInit = {}, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   let res: Response;

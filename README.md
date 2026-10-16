@@ -47,9 +47,12 @@ The primary site is a concise, projector-first research briefing:
 - `/architecture` — complete transfer-learning and deployment architecture
 - `/datasets` — stage data and the controlled processing method
 - `/results` — leaf and seed evidence, confusion matrices and verified handoff
-- `/analyze` — pending final experiment, four routes and fixed decision rule
+- `/final-stage` — pending cultivar experiment, four routes and fixed decision rule
+- `/analyze` — experimental cotton lab-property analysis
 
 Deeper supporting routes remain available outside the main presentation path:
+
+The local cotton lab-quality pilot is now at `/analyze`, with saved analyses at `/quality/history`. The pending cultivar experiment has moved to `/final-stage`. This is a separate task: a frozen ImageNet encoder compares mean/ridge baselines, CNN regression and a spatial CNN–LSTM head against ten provisional lab-report profiles. It does not establish final cultivar accuracy or laboratory-grade property measurement. See [docs/COTTON_QUALITY.md](docs/COTTON_QUALITY.md) for the complete mapping, training, evaluation, artifact and API workflow. `make quality-train` prepares labels, downloads official weights, compares models and activates the experimental local model.
 
 - `/research` — detailed problem, hypothesis and controlled experiment design
 - `/models/leaf` — intermediate model 1
@@ -86,6 +89,17 @@ Current configurable candidates:
 The final winner is selected from real experiments, not hardcoded assumptions.
 
 ## Quick start
+
+### Restore the published lab-quality model
+
+The active quality model and the original T1–T10 lab collection are included. Install [Git LFS](https://git-lfs.com/) before cloning, then run:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+This restores the binary weights for the `/analyze` workflow. Its 85.1% matching score is an exploratory same-known-lot image evaluation, not external/new-lot or physical lab-measurement accuracy. New local training runs, uploaded photos and databases are excluded from Git. The independent cultivar model still uses its separate registry.
 
 ### Python environment
 

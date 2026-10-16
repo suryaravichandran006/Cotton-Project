@@ -79,7 +79,7 @@ export default function HomePage() {
                       <span className="font-mono text-xs text-ink-muted">{stage.number}</span>
                       <p className={`mt-4 text-xl font-semibold ${stage.text}`}>{stage.title}</p>
                       <p className="mt-2 text-sm leading-6 text-ink-soft">{stage.detail}</p>
-                      {stage.status ? (
+                      {"status" in stage && stage.status ? (
                         <span className="mt-auto pt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{stage.status}</span>
                       ) : (
                         <span className="mt-auto pt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Initialization</span>

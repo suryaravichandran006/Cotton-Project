@@ -30,7 +30,7 @@ const COPY = {
     init: "Best leaf-stage ConvNeXt-Tiny checkpoint",
     head: "3-class broken / cracked / intact head",
     handoff: "180 compatible tensors transferred; 2 task-head tensors replaced.",
-    nextHref: "/analyze",
+    nextHref: "/final-stage",
     nextLabel: "Continue to final stage",
   },
 } as const;

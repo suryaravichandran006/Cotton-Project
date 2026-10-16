@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "property_version": 1,
+  "model_version": "20261014T100934100536Z",
+  "model": "cnn_lstm",
+  "encoder": "torchvision_mobilenet_v3_small_imagenet1k_v1",
+  "image_size": 224,
+  "token_grid": 4,
+  "feature_channels": 576,
+  "numeric_keys": [
+    "sci",
+    "moisture",
+    "micronaire",
+    "maturity",
+    "span_length",
+    "uniformity_ratio",
+    "short_fibre",
+    "strength",
+    "elongation",
+    "reflectance",
+    "yellowness",
+    "trash_count",
+    "trash_area"
+  ],
+  "category_keys": [
+    "colour_grade",
+    "trash_grade"
+  ],
+  "category_values": [
+    [
+      "11-1",
+      "21-1",
+      "21-2",
+      "31-1",
+      "31-3",
+      "32-1",
+      "42-1"
+    ],
+    [
+      "1",
+      "2",
+      "3",
+      "8"
+    ]
+  ],
+  "reference_lots": [
+    "T1",
+    "T10",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9"
+  ],
+  "distance_threshold": 0.12932923436164856,
+  "label_fingerprint": "365b4a29265f93ee3f4d9c50b796a0fcd744a888f89ef10a054f2be3ff572da9",
+  "label_status": "provisional_lot_average",
+  "experimental": true,
+  "files": {
+    "backbone.pt": "55412a353d893e3ec81626f8a9e2d66e51748675136408ca65959c44aa6fc633",
+    "convnext_features.npz": "9afd026d3c2e4b6bc6c945c51a5da22cad47336eed8a1801a8684e75ae9117f8",
+    "evaluation.json": "9b77c3964c07d663c22127fd406b5c6ab9e41b9e52dfb7d27fa8828d76bc492b",
+    "features.npz": "e67b3c96a02d4230c6a807faf9b8ea2f053d7e6b594c2532b0ffad2a5ab80ed3",
+    "head.pt": "864426e843c4971724e0c248d1b5cc6f4565c3ea0808193e87619c39037ec9c0",
+    "labels.json": "6558738f91c44d2643bf1ced1a5a31d9f464466b00ee99f5f583ab891d7b40d3",
+    "lot_backbone.pt": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d",
+    "lot_classifier.npz": "26f953a378db184576031678ea0db1e7f6b5e5659798ae852f6504785977fed0",
+    "manifest.json": "1d169f5fd25e1ce99b79dfe74205ceff9759feffca5d4d969e1700964cbdadc2",
+    "parameters.npz": "c387ae23c6b81b0bcea4f4798987ed3624f60d1fca18d16f903bc04ee29fef5f",
+    "references.npz": "6e9ba23ab96460c0412b7af283952b94a9aa4b3b6a9948d015ef0d37b15a5550"
+  },
+  "matching_classifier": {
+    "schema_version": 1,
+    "kind": "linear",
+    "model": "convnext_multiscale_c1",
+    "name": "ConvNeXt + linear classifier \u00b7 224px + 336px features \u00b7 C=1",
+    "classes": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10"
+    ],
+    "encoder": "convnext_tiny",
+    "encoder_weights": "torchvision ConvNeXt_Tiny_Weights.IMAGENET1K_V1",
+    "encoder_sha256": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d",
+    "view_mode": "multiscale",
+    "image_size": 224,
+    "resize_size": 236,
+    "input_sizes": [
+      224,
+      336
+    ],
+    "interpolation": "bilinear",
+    "version": "20261014T100934100536Z",
+    "orientation_views": [
+      "original",
+      "horizontal flip",
+      "90 degree rotation",
+      "180 degree rotation"
+    ],
+    "augmentation_scope": "Deterministic photo views averaged within each source; identical training and serving transforms. Each source counts once.",
+    "preprocessing": "EXIF orientation, bilinear shorter-side resize 236/crop224 or resize354/crop336, ImageNet normalization",
+    "c": 1.0
+  }
+}

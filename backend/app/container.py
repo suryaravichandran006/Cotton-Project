@@ -9,6 +9,7 @@ from fastapi import Request
 from backend.app.config import Settings
 from backend.app.services.model_service import ModelService
 from backend.app.services.prediction_service import PredictionService
+from backend.app.services.quality_service import QualityService
 from backend.app.services.storage import LocalStorage, StorageBackend
 from backend.app.services.varieties import VarietyCatalog
 
@@ -20,6 +21,7 @@ class Services:
     catalog: VarietyCatalog
     models: ModelService
     predictions: PredictionService
+    quality: QualityService
 
 
 def build_services(settings: Settings) -> Services:
@@ -27,7 +29,7 @@ def build_services(settings: Settings) -> Services:
     catalog = VarietyCatalog(settings.varieties_file)
     models = ModelService(settings, catalog)
     predictions = PredictionService(settings, storage, models, catalog)
-    return Services(settings=settings, storage=storage, catalog=catalog, models=models, predictions=predictions)
+    return Services(settings=settings, storage=storage, catalog=catalog, models=models, predictions=predictions, quality=QualityService(settings, storage))
 
 
 def get_services(request: Request) -> Services:

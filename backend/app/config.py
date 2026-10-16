@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     # ---- model -----------------------------------------------------------
     model_mode: Literal["mock", "trained"] = "mock"
     model_registry_path: str = "models/registry.json"
+    quality_model_path: str = "models/quality/active.json"
     model_device: str = "auto"
     unknown_threshold: float = Field(0.6, ge=0.0, le=1.0)
     varieties_path: str = "config/varieties.yaml"

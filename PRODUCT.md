@@ -24,7 +24,9 @@ The primary presentation path is Overview, Literature, Progress, Architecture, M
 
 ## Capabilities and Constraints
 
-- Leaf and seed training stages are complete; final cotton dataset access and training remain pending.
+- Leaf and seed training stages are complete; final cultivar dataset access and training remain pending.
+- A separate experimental lab-quality pilot maps ten provisional T1–T10 report profiles to loose-fibre photographs. It compares mean/ridge baselines, CNN regression and a spatial CNN–LSTM head; its results do not establish cultivar accuracy or replace HVI measurements.
+- `/analyze` displays the matched T label and recorded reference lab table, separate experimental estimates, CSV exports, the working diagram and headline matching metrics together; detailed comparison tables, confusion matrices and property-error sections are omitted from this page; saved query URLs restore the immutable result. The pending cultivar experiment remains at `/final-stage`. Unsupported grades and unconfirmed fields remain unavailable rather than receiving invented values.
 - The architecture must be a clean vertical diagram that shows dataset processing, training, measured output and checkpoint handoff between stages.
 - Real report artifacts under `Ran reports/` are the source of truth for measured results.
 - Do not fabricate final-stage results or imply that intermediate accuracy proves the final research hypothesis.

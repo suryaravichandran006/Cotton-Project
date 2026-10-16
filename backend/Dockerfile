@@ -22,6 +22,7 @@ COPY backend backend
 COPY ml ml
 COPY config config
 COPY models models
+COPY data/metadata data/metadata
 
 RUN mkdir -p backend/storage/uploads backend/storage/gradcam
 

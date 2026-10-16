@@ -31,6 +31,11 @@ data/processed/*
 !data/processed/.gitkeep
 models/checkpoints/*
 models/exports/*
+models/quality/*
+!models/quality/active.json
+!models/quality/runs/
+models/quality/runs/*
+!models/quality/runs/20261014T100934100536Z/
 !models/checkpoints/.gitkeep
 !models/exports/.gitkeep
 reports/
@@ -41,6 +46,9 @@ backend/storage/
 *.db
 *.db-wal
 *.db-shm
+
+# Published pilot weights are stored in Git LFS; other generated weights stay ignored.
+!models/quality/runs/20261014T100934100536Z/*.pt
 
 # ---- os / editor
 .DS_Store

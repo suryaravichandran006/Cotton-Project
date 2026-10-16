@@ -103,7 +103,7 @@ export default function ProgressPage() {
               {EXPERIMENT_ROUTES.length} routes will be tested. No route is treated as the winner before the final evidence exists.
             </p>
 
-            <Link href="/analyze" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
+            <Link href="/final-stage" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent transition hover:text-accent-strong">
               Open final stage <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

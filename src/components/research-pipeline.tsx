@@ -21,7 +21,7 @@ export function ResearchPipeline({ compact = false }: { compact?: boolean }) {
         body: `${dataset.name} · ${formatCount(dataset.images)} images`,
         muted: false,
         icon: ICONS[stage.id as keyof typeof ICONS] ?? Database,
-        href: stage.id === "leaf" ? "/models/leaf" : stage.id === "seed" ? "/models/seed" : "/analyze",
+        href: stage.id === "leaf" ? "/models/leaf" : stage.id === "seed" ? "/models/seed" : "/final-stage",
       };
     }),
   ];

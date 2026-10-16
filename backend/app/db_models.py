@@ -58,3 +58,12 @@ class Prediction(Base):
     client_metadata: Mapped[dict[str, Any] | None] = mapped_column(JSON)
 
     __table_args__ = (Index("ix_predictions_created_class", "created_at", "predicted_class"),)
+
+
+class QualityAnalysis(Base):
+    __tablename__ = "quality_analyses"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False, index=True)
+    image_key: Mapped[str] = mapped_column(String(255), nullable=False)
+    snapshot: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)

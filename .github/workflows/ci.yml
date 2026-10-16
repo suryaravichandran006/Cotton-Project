@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -47,11 +49,13 @@ jobs:
           NEXT_PUBLIC_API_URL: ""
 
   e2e:
-    name: End-to-end (Playwright, mock mode)
+    name: End-to-end (Playwright, trained quality pilot)
     runs-on: ubuntu-latest
     needs: [python, web]
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -60,6 +64,8 @@ jobs:
         with:
           node-version: 22
       - run: pip install -r backend/requirements.txt
+      - name: Install CPU quality inference dependencies
+        run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: python scripts/make_sample_images.py
@@ -69,6 +75,17 @@ jobs:
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8000/api/v1/health && break || sleep 1; done
         env:
           MODEL_MODE: mock
+      - name: Verify trained quality model is ready
+        run: |
+          python - <<'PY'
+          import json
+          import urllib.request
+          with urllib.request.urlopen('http://127.0.0.1:8000/api/v1/quality/status', timeout=60) as response:
+              status = json.load(response)
+          assert status['status'] == 'ready', status['message']
+          assert status['matching']['installed_model'] == 'convnext_multiscale_c1'
+          print('Trained quality model ready:', status['matching']['installed_name'])
+          PY
       - name: Build and start frontend (proxy mode)
         run: |
           npm run build

@@ -25,6 +25,7 @@ services:
     volumes:
       - backend-storage:/app/backend/storage
       - ./models:/app/models:ro
+      - ./Lab Reports:/app/Lab Reports:ro
     ports:
       - "8000:8000"
     healthcheck:

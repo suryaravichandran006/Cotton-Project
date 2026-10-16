@@ -19,7 +19,7 @@ export function ProductionFlow() {
           <h2 id="production-title" className="text-xl font-black uppercase leading-tight tracking-[-0.025em] text-[#111915] sm:text-2xl">Production Inference</h2>
           <span className="rounded-full border border-[#786b3d] bg-[#fff8d8] px-2.5 py-1 text-xs font-bold text-[#645728]">Planned</span>
         </div>
-        <Link href="/analyze" className="text-sm font-semibold text-[#26372e] underline decoration-[#6a8175] underline-offset-4 hover:text-accent">View final-stage status</Link>
+        <Link href="/final-stage" className="text-sm font-semibold text-[#26372e] underline decoration-[#6a8175] underline-offset-4 hover:text-accent">View final-stage status</Link>
       </header>
 
       <div className="grid gap-3 px-4 py-5 sm:px-6 sm:py-6 lg:grid-cols-[minmax(0,1fr)_42px_minmax(0,0.86fr)_42px_minmax(0,1fr)_42px_minmax(0,1.18fr)_42px_minmax(0,1fr)] lg:items-center lg:gap-0">

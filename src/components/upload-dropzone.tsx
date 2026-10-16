@@ -11,6 +11,8 @@ export interface UploadDropzoneProps {
   onFileChange: (file: File | null) => void;
   disabled?: boolean;
   maxMb?: number;
+  title?: string;
+  description?: string;
 }
 
 export function validateFile(file: File, maxMb: number): string | null {
@@ -22,7 +24,7 @@ export function validateFile(file: File, maxMb: number): string | null {
   return null;
 }
 
-export function UploadDropzone({ file, onFileChange, disabled = false, maxMb = MAX_UPLOAD_MB }: UploadDropzoneProps) {
+export function UploadDropzone({ file, onFileChange, disabled = false, maxMb = MAX_UPLOAD_MB, title, description }: UploadDropzoneProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -88,8 +90,8 @@ export function UploadDropzone({ file, onFileChange, disabled = false, maxMb = M
           <div className="relative grid h-16 w-16 place-items-center rounded-full border border-accent/20 bg-surface/85 text-accent shadow-card backdrop-blur">
             <UploadCloud className="h-6 w-6" aria-hidden />
           </div>
-          <p className="font-display relative mt-7 text-3xl text-ink">Place a fibre photograph on the instrument.</p>
-          <p className="relative mt-3 max-w-md text-sm leading-6 text-ink-soft">Drop a raw / ginned cotton image here or browse your device. The backend validates the actual image bytes before inference.</p>
+          <p className="font-display relative mt-7 text-3xl text-ink">{title ?? "Place a fibre photograph on the instrument."}</p>
+          <p className="relative mt-3 max-w-md text-sm leading-6 text-ink-soft">{description ?? "Drop a raw / ginned cotton image here or browse your device. The backend validates the actual image bytes before inference."}</p>
           <p id={`${inputId}-hint`} className="relative mt-3 font-mono text-[10px] text-ink-muted">JPEG · PNG · WEBP · up to {maxMb} MB</p>
           <div className="relative mt-7 flex flex-wrap items-center justify-center gap-2">
             <Button variant="secondary" size="sm" disabled={disabled} onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}><ImagePlus className="h-4 w-4" aria-hidden /> Choose file</Button>

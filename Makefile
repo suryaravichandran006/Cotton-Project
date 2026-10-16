@@ -94,6 +94,24 @@ export: ## Export + register + activate (NAME=..., VERSION=...)
 registry: ## Show registry
 	$(PYTHON) -m ml.register_model --list
 
+quality-prepare: ## Audit and map provisional cotton lab labels without modifying images
+	$(PYTHON) -m ml.quality.data
+
+quality-backbone: ## Download official pretrained weights for the cotton quality pilot
+	$(PYTHON) -m ml.quality.download_backbone
+
+quality-train: quality-prepare quality-backbone ## Compare models and activate an explicitly experimental quality pilot
+	$(PYTHON) -m ml.quality.train --allow-provisional --activate
+
+quality-matching: ## Compare trained T-label classifiers and fine-tune the CNN; activate the selected pilot
+	$(PYTHON) -m ml.quality.train_matching --allow-provisional --activate
+	$(PYTHON) -m ml.quality.download_matching_backbone
+	$(PYTHON) -m ml.quality.train_convnext_matching --allow-provisional --activate
+
+quality-convnext: ## Compare ConvNeXt classifiers at two resolutions and activate an improved known-lot matcher
+	$(PYTHON) -m ml.quality.download_matching_backbone
+	$(PYTHON) -m ml.quality.train_convnext_matching --allow-provisional --activate
+
 # ---------------------------------------------------------------- docker
 docker-build: ## Build images
 	docker compose build
@@ -108,4 +126,4 @@ clean: ## Remove caches and build artefacts
 	rm -rf .next node_modules/.cache .pytest_cache .ruff_cache reports/dataset_audit
 	find . -name "__pycache__" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 
-.PHONY: help install install-backend install-ml install-frontend env samples migrate backend frontend dev test test-backend test-frontend test-e2e lint format smoke audit split train train-all evaluate export registry docker-build docker-up docker-down clean
+.PHONY: help install install-backend install-ml install-frontend env samples migrate backend frontend dev test test-backend test-frontend test-e2e lint format smoke audit split train train-all evaluate export registry quality-prepare quality-backbone quality-train quality-matching quality-convnext docker-build docker-up docker-down clean

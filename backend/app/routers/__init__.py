@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from backend.app.routers import classes, health, models, predict, predictions, research, statistics, system
+from backend.app.routers import classes, health, models, predict, predictions, quality, research, statistics, system
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["health"])
@@ -13,5 +13,6 @@ api_router.include_router(predictions.router, prefix="/predictions", tags=["hist
 api_router.include_router(statistics.router, prefix="/statistics", tags=["statistics"])
 api_router.include_router(system.router, prefix="/system", tags=["system"])
 api_router.include_router(research.router, prefix="/research", tags=["research"])
+api_router.include_router(quality.router, prefix="/quality", tags=["cotton quality"])
 
 __all__ = ["api_router"]

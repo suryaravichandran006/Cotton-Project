@@ -5,6 +5,22 @@ limit_req_zone $binary_remote_addr zone=cotton_analysis_upload:10m rate=6r/m;
 server {
     listen 80;
     server_name cotton.187-127-142-201.sslip.io;
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/cotton-acme;
+        try_files $uri =404;
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name cotton.187-127-142-201.sslip.io;
+    ssl_certificate /etc/letsencrypt/live/cotton.187-127-142-201.sslip.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/cotton.187-127-142-201.sslip.io/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
     client_max_body_size 11m;
 
     location = /api/backend/api/v1/quality/analyze {

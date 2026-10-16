@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test
@@ -67,7 +67,7 @@ jobs:
       - name: Install CPU quality inference dependencies
         run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
       - run: pip install timm
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: python scripts/make_sample_images.py
       - name: Start backend (mock mode)

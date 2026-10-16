@@ -1,6 +1,6 @@
 # Analysis-only deployment on the shared Hostinger VPS
 
-Target supplied by the owner: `187.127.142.201`, SSH user `root`. Emerging Alliance and DataChat already run there. The chosen no-purchase hostname is `cotton.187-127-142-201.sslip.io`; its DNS was verified to resolve to this VPS. The current web-server type, available port and machine capacity must be confirmed before installation. Non-interactive SSH from the current machine was rejected; no remote changes have been made.
+Target supplied by the owner: `187.127.142.201`, SSH user `root`. Emerging Alliance and DataChat already run there. The chosen no-purchase hostname is `cotton.187-127-142-201.sslip.io`; its DNS resolves to this VPS. Deployment uses the existing native Nginx and Docker installation, a dedicated SSH key, and the previously unused loopback port 3180. The HTTPS certificate has been issued and its renewal dry run passed.
 
 ## What this serves
 
@@ -31,13 +31,15 @@ Create a private `.env.hostinger` (keep it outside Git):
 ```dotenv
 COTTON_PUBLIC_ORIGIN=https://cotton.187-127-142-201.sslip.io
 COTTON_LOCAL_PORT=3180
+COTTON_RELEASE=<verified-release-tag>
 ```
 
 The selected sslip.io hostname resolves automatically; no domain purchase or DNS-zone edit is needed. Do not add `/analyze`, `/api/backend` or a trailing slash to the origin. Confirm `3180` is unused and inspect free RAM/CPU/disk first because the VPS also serves two live apps. GitHub credentials for the private repository are configured on the VPS separately; never embed a token in the clone URL or deployment files.
 
 ```sh
 docker compose --env-file .env.hostinger -f docker-compose.hostinger.yml config --quiet
-docker compose --env-file .env.hostinger -f docker-compose.hostinger.yml up -d --build
+# Build each image sequentially with the limits described above first.
+docker compose --env-file .env.hostinger -f docker-compose.hostinger.yml up -d --no-build
 docker compose --env-file .env.hostinger -f docker-compose.hostinger.yml ps
 ```
 
@@ -55,4 +57,4 @@ Keep the upload size limit and inference timeout from the template; rate-limit t
 
 Back up the `cotton-analysis_cotton-storage` Docker volume before updating releases; it contains SQLite and uploaded images. Stop only this Compose project for a consistent file-level backup if using a volume archive. Never run `docker compose down -v` against this or another project. Keep the previous code commit and frozen model together for rollback. Service logs rotate automatically.
 
-This is a prepared configuration, not evidence of a successful container build or a live deployment. Record the exact pushed revision and successful Docker/HTTPS checks when deployment is completed.
+The frontend uses Next.js 16.4.2 and a committed lockfile; use `npm ci` to reproduce it. The production dependency audit passed with zero reported vulnerabilities after the October 16 security update. Development tooling has separate advisories and is excluded from the standalone runtime image. Record the exact pushed revision and successful Docker/HTTPS checks when deployment is completed; configuration alone does not prove a live deployment.
